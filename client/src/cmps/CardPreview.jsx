@@ -51,7 +51,7 @@ class _CardPreview extends Component {
         if (dates.startDate && dates.endDate) {
             changeCardDates(dates, { ...board }, group.id, card, loggedInUser)
         } else if (!dates.endDate) {
-            changeCardDates(dates, { ...board }, group.id, card.id, loggedInUser)
+            changeCardDates(dates, { ...board }, group.id, card, loggedInUser)
         }
         this.closeDatePicker()
     }
