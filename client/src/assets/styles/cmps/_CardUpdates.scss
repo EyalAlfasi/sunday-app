@@ -15,6 +15,10 @@
     transition: transform 0.3s;
     z-index: 99;
 
+    & .created-at{
+        color: $grey;
+    }
+
     & .updates-card-header {
         width: 100%;
         display: flex;

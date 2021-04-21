@@ -139,8 +139,9 @@ class _CardUpdates extends Component {
         }, '')
         return (
             <>
-                <section className={`card-updates open   `}>
+                <section className={`card-updates open`}>
                     <Link className="back-arrow" to={`/board/${board._id}`} onClick={() => this.setState({ isOpen: false })}><ArrowBackIcon /></Link>
+                    <small className="created-at">Created at : {new Date(card.createdAt).toDateString()}</small>
                     <div className="updates-card-header flex align-center space-between">
                         <h2 className="card-update-title">{this.state.card.title}</h2>
                         <span className="card-status" style={{ backgroundColor: card.status.color }}>{card.status.text}</span>
