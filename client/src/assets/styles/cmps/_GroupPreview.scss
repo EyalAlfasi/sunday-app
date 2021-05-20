@@ -11,20 +11,16 @@
     }
 }
 
-.group-modal {
-    top: 100%;
-    position: absolute !important;
+.group-menu-container {
     background-color: $white;
     box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.2);
     z-index: 999;
 }
+.group-colors-container {
+    max-width: 150px;
+}
 .group-sort-modal {
     background-color: $white;
-    box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.2);
-    z-index: 999;
-    position: absolute !important;
-    top: 0;
-    left: 102%;
 }
 
 .group-sort {

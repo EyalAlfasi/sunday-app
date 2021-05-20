@@ -1,6 +1,10 @@
 import { boardService } from "../../services/boardService"
 import { socketService } from "../../services/socketService"
 import { userService } from "../../services/userService"
+
+
+const setBoard = (dispatch, board) => dispatch({ type: 'SET_CURR_BOARD', board })
+
 export function loadBoards(userId) {
     return async dispatch => {
         try {
@@ -30,11 +34,7 @@ export function changeBoardTitle(newTitle, board, user) {
     return async (dispatch) => {
         try {
             const boardToUpdate = await boardService.changeBoardTitle(newTitle, board, user)
-            const action = {
-                type: 'SET_CURR_BOARD',
-                board: boardToUpdate
-            }
-            dispatch(action)
+            setBoard(dispatch, boardToUpdate)
         } catch (err) {
             const action = {
                 type: 'SET_CURR_BOARD',
@@ -136,6 +136,7 @@ export function addBoard(boardTitle, user) {
     }
 }
 export function changeGroupIdx(board, result) {
+    console.log(board, result);
     return async () => {
         try {
             return await boardService.changeGroupIdx(board, result)
@@ -202,6 +203,8 @@ export function changeCardLabels(board, card, groupId, label, labelType, user) {
     return async (dispatch) => {
         try {
             const boardToUpdate = await boardService.changeCardLabels(board, card, groupId, label, labelType, user)
+            console.log('hi');
+            console.log(boardToUpdate);
             const action = {
                 type: 'SET_CURR_BOARD',
                 board: boardToUpdate

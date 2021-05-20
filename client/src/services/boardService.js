@@ -38,17 +38,17 @@ function getKeyById(source, target) {
 
     const sourceSet = new Set()
     return findTarget(source, target)
-    
+
     function findTarget(source, target) {
-        
-    
+
+
         if (!source) {
             sourceSet.clear()
             return
         }
 
         if (sourceSet.has(source)) {
-          
+
             sourceSet.clear()
             return
         }
@@ -134,7 +134,7 @@ async function removeBoard(boardId) {
 
 function getBoardIdByIdx(boardIdx, boards) {
 
-    let currBoardId = (!boardIdx && boards.length) ? boards[boardIdx]._id : boards[boardIdx - 1]?._id
+    const currBoardId = (!boardIdx && boards.length) ? boards[boardIdx]._id : boards[boardIdx - 1]?._id
     return currBoardId
 }
 
@@ -188,7 +188,7 @@ async function addGroup(board, user) {
         boardToUpdate.activities = [activity, ...boardToUpdate.activities]
         const newGroup = _createDefaultGroup(user);
         boardToUpdate.groups = [newGroup, ...boardToUpdate.groups]
-         httpService.put('board', boardToUpdate)
+        httpService.put('board', boardToUpdate)
         return boardToUpdate
     } catch (err) {
         throw err
@@ -208,7 +208,7 @@ async function deleteCard({ board, groupId, cardId, user }) {
         const groups = boardToUpdate.groups.map(group => group.id === groupToUpdate.id ? groupToUpdate : group)
         boardToUpdate.groups = groups
 
-         httpService.put('board', boardToUpdate)
+        httpService.put('board', boardToUpdate)
         return boardToUpdate
     } catch (err) {
         throw err
@@ -222,7 +222,8 @@ async function changeBoardTitle(newTitle, board, user) {
     const activity = _createBoardActivity(user, activityText)
     boardToUpdate.activities = [activity, ...boardToUpdate.activities]
     boardToUpdate.title = newTitle
-     httpService.put('board', boardToUpdate)
+    const res = await httpService.put('board', boardToUpdate)
+    console.log(res);
     return boardToUpdate
 }
 
@@ -287,7 +288,7 @@ async function removeGroup(board, groupToUpdate, user) {
 
         const groups = boardToUpdate.groups.filter(group => group.id !== groupToUpdate.id)
         boardToUpdate.groups = groups
-         httpService.put('board', boardToUpdate)
+        httpService.put('board', boardToUpdate)
         return boardToUpdate
 
     } catch (err) {
@@ -489,7 +490,7 @@ async function addCardLabel(board, groupId, label, labelGroup) {
             } else return group;
         })
         board.groups = groups
-         httpService.put('board', board)
+        httpService.put('board', board)
         return board
     } catch (err) {
         throw err

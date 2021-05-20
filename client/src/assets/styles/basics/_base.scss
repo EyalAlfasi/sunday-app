@@ -4,7 +4,7 @@
 
 body {
     margin: 0;
-    font-family: "Heebo", sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 img {
@@ -35,7 +35,7 @@ ul {
 
 button {
     cursor: pointer;
-    font-family: "Heebo", sans-serif;
+    font-family: 'Roboto', sans-serif;
     &:focus {
         outline: none;
     }
@@ -43,7 +43,7 @@ button {
 
 input,
 textarea {
-    font-family: "Heebo", sans-serif;
+    font-family: 'Roboto', sans-serif;
 
     &:focus {
         outline: none;

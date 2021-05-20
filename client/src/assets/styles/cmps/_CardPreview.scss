@@ -4,16 +4,18 @@
     grid-template-columns: 7px minmax(212px, 1fr) 40px 75px 125px 125px 125px 125px 7px;
     grid-gap: 1px;
     min-width: 807px;
-    margin: 0.2em 0;
-    height: 40px;
-    // box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.15);
+    margin: 0.1em 0;
+    height: 36px;
     cursor: pointer;
     margin-left: 30px;
-    font-size: 0.9rem;
+    font-size: rem(13px);
 
     &:hover {
         & > div {
             background-color: $lightgrey;
+        }
+        & .card-title {
+            color: $blue;
         }
     }
     & .card-priority {
@@ -94,11 +96,21 @@
     }
     & .card-title {
         padding: 0 2px;
-        // overflow: hidden;
-        // text-overflow: ellipsis;
-        // white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         vertical-align: baseline;
+        transition: color 0.2s ease;
         width: 100%;
+        & .editable-element {
+            flex-grow: 1;
+            height: 80%;
+            display: flex;
+            align-items: center;
+            &:focus {
+                color: $blue;
+            }
+        }
         & svg {
             visibility: hidden;
             color: $grey;
@@ -175,5 +187,15 @@
         position: absolute;
         z-index: 1;
         left: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-preview {
+        .card-title {
+            & svg {
+                visibility: visible;
+            }
+        }
     }
 }

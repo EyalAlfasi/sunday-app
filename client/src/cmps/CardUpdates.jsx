@@ -138,48 +138,46 @@ class _CardUpdates extends Component {
 
         }, '')
         return (
-            <>
-                <section className={`card-updates open`}>
-                    <Link className="back-arrow" to={`/board/${board._id}`} onClick={() => this.setState({ isOpen: false })}><ArrowBackIcon /></Link>
-                    <small className="created-at">Created at : {new Date(card.createdAt).toDateString()}</small>
-                    <div className="updates-card-header flex align-center space-between">
-                        <h2 className="card-update-title">{this.state.card.title}</h2>
-                        <span className="card-status" style={{ backgroundColor: card.status.color }}>{card.status.text}</span>
-                    </div>
-                    <div className="text-editor-wrapper">
-                        <form onSubmit={this.onAddUpdate}>
-                            <SunEditor placeholder="Write an update..."
-                                onChange={this.handleChange}
-                                onDrop={this.handleDrop}
-                                setDefaultStyle=""
-                                setOptions={{
-                                    buttonList: [
-                                        ['bold', 'underline', 'italic', 'strike', 'fontColor', 'fontSize', 'align', 'link', 'image'],],
-                                    // ['formatBlock', 'font', 'fontSize',],
-                                    // ['fontColor', 'hiliteColor', 'align',],
-                                    // ['removeFormat'], ['table', 'link', 'image', 'video'], ['codeView', 'fullScreen'], ['print']],
-                                    imageResizing: false
+            <section className={`card-updates open`}>
+                <Link className="back-arrow" to={`/board/${board._id}`} onClick={() => this.setState({ isOpen: false })}><ArrowBackIcon /></Link>
+                <small className="created-at">Created at : {new Date(card.createdAt).toDateString()}</small>
+                <div className="updates-card-header flex align-center space-between">
+                    <h2 className="card-update-title">{this.state.card.title}</h2>
+                    <span className="card-status" style={{ backgroundColor: card.status.color }}>{card.status.text}</span>
+                </div>
+                <div className="text-editor-wrapper">
+                    <form onSubmit={this.onAddUpdate}>
+                        <SunEditor placeholder="Write an update..."
+                            onChange={this.handleChange}
+                            onDrop={this.handleDrop}
+                            setDefaultStyle=""
+                            setOptions={{
+                                buttonList: [
+                                    ['bold', 'underline', 'italic', 'strike', 'fontColor', 'fontSize', 'align', 'link', 'image'],],
+                                // ['formatBlock', 'font', 'fontSize',],
+                                // ['fontColor', 'hiliteColor', 'align',],
+                                // ['removeFormat'], ['table', 'link', 'image', 'video'], ['codeView', 'fullScreen'], ['print']],
+                                imageResizing: false
 
-                                }}
-                                // onImageUpload={this.uploadImg}
-                                // onImageUploadBefore={this.onImageUploadBefore}
-                                setContents={cardUpdate.value}
+                            }}
+                            // onImageUpload={this.uploadImg}
+                            // onImageUploadBefore={this.onImageUploadBefore}
+                            setContents={cardUpdate.value}
 
-                            />
-                            <div className="updates-bottom-btns flex space-between align-center">
-                                <label className="upload-file-label"><CloudUploadIcon /> Upload image
+                        />
+                        <div className="updates-bottom-btns flex space-between align-center">
+                            <label className="upload-file-label"><CloudUploadIcon /> Upload image
                                     <input type="file" onChange={this.uploadImg} /></label>
-                                <button className="card-update-btn add-item">Update</button>
-                            </div>
+                            <button className="card-update-btn add-item">Update</button>
+                        </div>
 
-                        </form>
+                    </form>
 
-                    </div>
-                    <div className="updates-container">
-                        <div dangerouslySetInnerHTML={{ __html: htmlUpdates }} />
-                    </div>
-                </section>
-            </>
+                </div>
+                <div className="updates-container">
+                    <div dangerouslySetInnerHTML={{ __html: htmlUpdates }} />
+                </div>
+            </section>
         )
 
     }

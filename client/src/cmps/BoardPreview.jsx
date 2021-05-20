@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { GroupPreview } from './GroupPreview';
+import { GroupPreview } from './group-preview-components/GroupPreview';
 import { BoardHeader } from './BoardHeader';
 import {
     loadBoards, addCard, addGroup, changeBoardTitle, onChangeGroupTitle, changeBoardMemebrs,
@@ -45,16 +45,11 @@ export class _BoardPreview extends Component {
     //Group Title
     onChangeGroupTitle = async (groupTitle, groupId) => {
         const { board, onChangeGroupTitle, loggedInUser } = this.props
-        await onChangeGroupTitle({ board: { ...board }, groupId, groupTitle, user: loggedInUser })
+        await onChangeGroupTitle({ board, groupId, groupTitle, user: loggedInUser })
     }
     onChangeBoardMemebrs = async (memberData, type) => {
         const { changeBoardMemebrs, loggedInUser, board } = this.props;
         await changeBoardMemebrs(memberData, board, type, loggedInUser);
-    }
-    onChangeGroupColor = async (color, groupId) => {
-        this.props.setMsg('Group color Successfully Change')
-        const { changeGroupColor, board } = this.props;
-        await changeGroupColor(color, board, groupId)
     }
     onRemoveGroup = async (group) => {
         const { removeGroup, board, loggedInUser } = this.props;
@@ -67,8 +62,9 @@ export class _BoardPreview extends Component {
     onDragEnd = async (result) => {
         this.props.onDragEnd()
         const { destination, source, draggableId } = result
+        console.log(result);
         if (!destination) return
-        if (destination.droppableId === source.droppableId && destination.index === source.index || !destination.droppableId || !source.droppableId) return
+        if (((destination.droppableId === source.droppableId) && (destination.index === source.index)) || !destination.droppableId || !source.droppableId) return
         const { changeGroupIdx, changeCardIdx, board } = this.props
         if (result.type === 'group') {
             const boardToUpdate = await changeGroupIdx(board, result)
@@ -183,29 +179,46 @@ export class _BoardPreview extends Component {
         const { isShowDashboard } = this.state
         const filteredBoard = this.getBoardForDisplay()
         return (
-            <>
-                <BoardHeader user={loggedInUser} board={board} onAddGroup={this.onAddGroup} changeBoardView={this.changeBoardView} onChangeTitle={this.onChangeTitle}
-                    onChangeBoardMemebrs={this.onChangeBoardMemebrs} onSetFilter={this.onSetFilter} />
+            <div className="board-preview-container">
+                <BoardHeader
+                    user={loggedInUser}
+                    board={board}
+                    onAddGroup={this.onAddGroup}
+                    changeBoardView={this.changeBoardView}
+                    onChangeTitle={this.onChangeTitle}
+                    onChangeBoardMemebrs={this.onChangeBoardMemebrs}
+                    onSetFilter={this.onSetFilter}
+                />
                 {isShowDashboard && <DashBoard board={board} />}
-                {!isShowDashboard && <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
-                    <Droppable droppableId={board._id} isCombineEnabled type='group'>
-                        {(provided) => (
-                            <div className="main-groups-container" ref={provided.innerRef}
-                                {...provided.droppableProps}>
-                                {provided.placeholder}
-                                <div className="groups-container flex column">
-                                    {filteredBoard.groups.map((group, idx) => <GroupPreview
-                                        key={group.id} group={group}
-                                        onDrag={onDrag}
-                                        onAddCard={this.onAddCard} board={board} onRemoveGroup={this.onRemoveGroup}
-                                        onChangeGroupTitle={this.onChangeGroupTitle} onChangeGroupColor={this.onChangeGroupColor}
-                                        idx={idx} />)}
-                                </div>
-                            </div>
-                        )}
-                    </Droppable>
-                </DragDropContext>}
-            </>
+                {!isShowDashboard &&
+                    <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
+                        <div
+                            className="main-groups-container"
+
+                        >
+                            <Droppable droppableId={board._id} isCombineEnabled type='group'>
+                                {(provided) => (
+                                    <div ref={provided.innerRef}
+                                        {...provided.droppableProps}>
+                                        {filteredBoard.groups.map((group, idx) => (
+                                            <GroupPreview
+                                                key={group.id}
+                                                group={group}
+                                                onDrag={onDrag}
+                                                onAddCard={this.onAddCard}
+                                                board={board}
+                                                onRemoveGroup={this.onRemoveGroup}
+                                                onChangeGroupTitle={this.onChangeGroupTitle}
+                                                idx={idx}
+                                            />
+                                        ))}
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </div>
+                    </DragDropContext>}
+            </div>
         )
     }
 }

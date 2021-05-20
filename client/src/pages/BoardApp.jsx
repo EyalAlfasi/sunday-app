@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component, useEffect, useState } from 'react'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { MainSideBar } from '../cmps/MainSideBar'
 import { BoardSideBar } from '../cmps/BoardSideBar'
 import { BoardPreview } from '../cmps/BoardPreview'
@@ -12,143 +12,110 @@ import { socketService } from '../services/socketService'
 import { Route } from 'react-router-dom';
 import { Redirect } from 'react-router-dom'
 import { CardUpdates } from '../cmps/CardUpdates'
-class _BoardApp extends Component {
-    state = {
-        isBoardSideBarOpen: window.innerWidth >= 800,
-        boardTitle: '',
-    }
-    async componentDidMount() {
-        const { loggedInUser, boards } = this.props
+
+export const BoardApp = ({ match, history }) => {
+    const [isBoardSideBarOpen, setIsBoardSideBarOpen] = useState(window.innerWidth >= 800)
+    const [boardTitle, setBoardTitle] = useState('')
+    const dispatch = useDispatch()
+    const loggedInUser = useSelector((state) => state.userReducer.loggedInUser)
+    const boards = useSelector((state) => state.boardReducer.boards)
+    const board = useSelector((state) => state.boardReducer.board)
+    const msg = useSelector((state) => state.userReducer.msg)
+    const [action, setAction] = useState('firstLoad')
+
+    useEffect(() => {
+        const { boardId } = match.params
+        if (!boardId) return
+        else dispatch(getBoardById(boardId))
+    }, [match.params])
+
+    useEffect(() => {
+        initializeBoards()
+        return () => {
+            socketService.off('boardUpdate', updateBoards)
+            socketService.off('updateUser', updateUserNotifications)
+            socketService.terminate()
+        }
+    }, [])
+
+    useEffect(() => {
+        if (action === 'add') {
+            history.push(`/board/${boards[boards.length - 1]._id}`)
+            setAction('')
+        }
+        else if (action === 'firstLoad') {
+            if (boards.length) {
+                history.push(`/board/${boards[0]._id}`)
+                setAction('')
+            }
+        }
+    }, [boards.length])
+
+    const initializeBoards = async () => {
         if (!loggedInUser) {
-            this.props.history.push('/')
+            history.push('/')
             return
         }
         socketService.setup()
         socketService.emit('userSocket', loggedInUser)
-        socketService.on('boardUpdate', this.props.updateBoards)
-        socketService.on('updateUser', this.props.updateUserNotifications)
-        const { boardId } = this.props.match.params;
-        if (!boardId) {
-            const userBoards = await this.props.loadBoards(loggedInUser._id)
-            if (userBoards.length) this.props.history.push(`/board/${userBoards[0]._id}`)
+        socketService.on('boardUpdate', updateBoards)
+        socketService.on('updateUser', updateUserNotifications)
+        const { boardId } = match.params;
+        if (!boardId) dispatch(loadBoards(loggedInUser._id))
+        else if (!boards.length && boardId) dispatch(loadBoards(loggedInUser._id))
+        if (boardId) dispatch(getBoardById(boardId))
+    }
+
+    const onDeleteBoard = async (boardId, boardIdx) => {
+        await dispatch(removeBoard(boardId))
+        if (boardId === board._id) {
+            const currBoardId = boardService.getBoardIdByIdx(boardIdx, boards)
+            if (currBoardId) history.push(`/board/${currBoardId}`)
+            else history.push('/board')
         }
-        else if (!boards.length && boardId) await this.props.loadBoards(loggedInUser._id)
-        if (boardId) {
-            this.loadBoardById(boardId)
-        }
+        dispatch(setMsg('Board Successfully Deleted'))
     }
-    componentWillUnmount() {
-        socketService.off('boardUpdate', this.props.updateBoards)
-        socketService.off('updateUser', this.props.updateUserNotifications)
-        socketService.terminate()
+
+    const onAddBoard = async (boardTitle) => {
+        setAction('add')
+        await dispatch(addBoard(boardTitle, loggedInUser))
+        dispatch(setMsg('Board Successfully Added'))
     }
-    async componentDidUpdate(prevProps) {
-        if (prevProps.match.params.boardId !== this.props.match.params.boardId || prevProps.boards !== this.props.boards) {
-            const { boardId } = this.props.match.params
-            if (!boardId) return
-            else {
-                this.loadBoardById(boardId)
-            }
-        }
-    }
-    loadBoards = () => {
-        const { loadBoards, loggedInUser } = this.props
-        loadBoards(loggedInUser._id)
-    }
-    loadBoardById = async (boardId) => {
-        await this.props.getBoardById(boardId)
-    }
-    toggleBoardSideBar = () => {
-        this.setState({ isBoardSideBarOpen: !this.state.isBoardSideBarOpen })
-    }
-    onDeleteBoard = async (boardId, boardIdx) => {
-        await this.props.removeBoard(boardId)
-        const { boards } = this.props
-        const currBoardId = boardService.getBoardIdByIdx(boardIdx, boards)
-        if (currBoardId) this.props.history.push(`/board/${currBoardId}`)
-        else this.props.history.push('/board')
-        this.props.setMsg('Board Successfully Deleted')
-    }
-    onAddBoard = (boardTitle) => {
-        this.props.addBoard(boardTitle, this.props.loggedInUser)
-        this.props.setMsg('Board Successfully Added')
-    }
-    onLogOut = async () => {
-        await this.props.logOut()
-    }
-    onSetFilter = (boardTitle) => {
-        this.setState({ boardTitle })
-    }
-    getBoardsForDisplay = () => {
-        const { boardTitle } = this.state
-        const { boards } = this.props
+
+    const getBoardsForDisplay = () => {
         const filterRegex = new RegExp(boardTitle, 'i');
         const copyBoards = boards.filter(board => filterRegex.test(board.title));
         return copyBoards
     }
-    onCleanNotifications = () => {
-        this.props.cleanNotifications(this.props.loggedInUser)
-    }
-    onUpdateNotifications = () => {
-        this.props.updateReadNotifications(this.props.loggedInUser)
-    }
-    render() {
-        const { match, loggedInUser, msg, board } = this.props
-        const { isBoardSideBarOpen } = this.state
-        if (!this.props.loggedInUser) return <Redirect exact to="/" />
-        return <div>
-            <div className="main-sidebar-container mobile">
-                <MainSideBar
-                    onLogOut={this.onLogOut}
-                    user={loggedInUser}
-                    onCleanNotifications={this.onCleanNotifications}
-                    onUpdateNotifications={this.onUpdateNotifications} />
-            </div>
-            <div className="board-app-container flex">
-                <div className="main-sidebar-container desktop">
-                    <MainSideBar
-                        onLogOut={this.onLogOut}
-                        user={loggedInUser}
-                        onCleanNotifications={this.onCleanNotifications}
-                        onUpdateNotifications={this.onUpdateNotifications} />
-                </div>
+
+    if (!loggedInUser) return <Redirect exact to="/" />
+    return (
+        <div className="board-app-container">
+            <MainSideBar
+                onLogOut={() => dispatch(logOut())}
+                user={loggedInUser}
+                onCleanNotifications={() => dispatch(cleanNotifications(loggedInUser))}
+                onUpdateNotifications={() => dispatch(updateReadNotifications(loggedInUser))}
+            />
+            <div className="flex board-and-sidebar-container">
                 <div className={`board-sidebar-container ${!isBoardSideBarOpen ? 'closed' : ''}`}>
-                    <button className="toggle-board-sidebar" onClick={this.toggleBoardSideBar}>
+                    <button className="toggle-board-sidebar" onClick={() => setIsBoardSideBarOpen(!isBoardSideBarOpen)}>
                         {isBoardSideBarOpen ? <ArrowBackIcon /> : <ArrowForwardIcon />}
                     </button>
-                    <BoardSideBar boards={this.getBoardsForDisplay()} onDeleteBoard={this.onDeleteBoard} onAddBoard={this.onAddBoard} user={loggedInUser} onSetFilter={this.onSetFilter} />
+                    <BoardSideBar
+                        boards={getBoardsForDisplay()}
+                        onDeleteBoard={onDeleteBoard}
+                        onAddBoard={onAddBoard}
+                        user={loggedInUser}
+                        onSetFilter={() => setBoardTitle(boardTitle)}
+                    />
                 </div>
-                <div className="board-preview-container">
-                    {board && <BoardPreview />}
-                </div>
-                <div>
-                    <Route path={`${match.path}/card/:cardId`} render={(props) => {
-                        return <CardUpdates board={board} {...props} />
-                    }} />
-                </div>
+                {board && <BoardPreview />}
+                <Route path={`${match.path}/card/:cardId`} render={(props) => {
+                    return <CardUpdates board={board} {...props} />
+                }} />
                 {msg && <div className="snackbar slide-top">{msg}</div>}
             </div>
         </div>
-    }
+    )
 }
-const mapGlobalStateToProps = (state) => {
-    return {
-        loggedInUser: state.userReducer.loggedInUser,
-        boards: state.boardReducer.boards,
-        msg: state.userReducer.msg,
-        board: state.boardReducer.board
-    }
-}
-const mapDispatchToProps = {
-    removeBoard,
-    loadBoards,
-    getBoardById,
-    logOut,
-    addBoard,
-    updateBoards,
-    setMsg,
-    updateReadNotifications,
-    updateUserNotifications,
-    cleanNotifications
-}
-export const BoardApp = connect(mapGlobalStateToProps, mapDispatchToProps)(_BoardApp);

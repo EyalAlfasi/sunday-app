@@ -3,16 +3,13 @@ import ReactDOM from 'react-dom';
 import { App } from './App.jsx';
 import { Provider } from 'react-redux';
 import { store } from './store/store.js'
-import { HashRouter as Router } from 'react-router-dom';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
 
   <Provider store={store}>
-    <Router>
-      <App />
-    </Router>
+    <App />
   </Provider>,
   document.getElementById('root')
 );

@@ -47,6 +47,7 @@ export class LabelMenu extends Component {
             return
         }
         this.setState({ currLabel: newLabel }, () => {
+            console.log(this.state);
             this.props.onSaveLabel(newLabel, this.props.labelName);
             this.toggleMenu();
         });
@@ -80,23 +81,38 @@ export class LabelMenu extends Component {
     render() {
         const { labels, currLabel, enableAdding } = this.props;
         const { isAddLabelOpen, isOpen, showAddLabelError, newLabel } = this.state;
+
         return <div className="labels-menu-container">
-            <div className="labels-menu-chosen-item" onClick={this.toggleMenu} style={{ backgroundColor: currLabel.color }}>
+            <div
+                className="labels-menu-chosen-item"
+                onClick={this.toggleMenu}
+                style={{ backgroundColor: currLabel.color }}
+            >
                 {currLabel.text}
                 <span className="fold"></span>
             </div>
             {isOpen &&
                 <ClickAwayListener onClickAway={this.toggleMenu}>
-                    <div onBlur={this.toggleMenu} className="labels-menu-floating-container">
+                    <div
+                        onBlur={this.toggleMenu}
+                        className="labels-menu-floating-container"
+                    >
                         <div className="labels-grid">
                             {labels.map((label, idx) => {
-                                return <div key={idx} className="labels-menu-item" onClick={() => this.setCurrLabel(label)}
-                                    style={{ backgroundColor: label.color }}>
+                                return <div
+                                    key={idx}
+                                    className="labels-menu-item"
+                                    onClick={() => this.setCurrLabel(label)}
+                                    style={{ backgroundColor: label.color }}
+                                >
                                     {label.text}
                                 </div>
                             })}
                             {enableAdding &&
-                                <div className="labels-menu-item new-label" onClick={this.toggleAddNewLabel}>
+                                <div
+                                    className="labels-menu-item new-label"
+                                    onClick={this.toggleAddNewLabel}
+                                >
                                     Add {this.props.labelName}
                                 </div>}
                         </div>
@@ -106,8 +122,15 @@ export class LabelMenu extends Component {
                                 <span onClick={this.addLabel}>Save</span>
                             </div>
                             <form onSubmit={this.addLabel} className="relative">
-                                <span style={{ backgroundColor: `${newLabel.color ? newLabel.color : ''}` }} className="color-preview"></span>
-                                <TextField name="text" autoComplete="off" placeholder={showAddLabelError ? "Please enter label + color" : "Enter label"} onChange={this.handleInput} />
+                                <span
+                                    style={{ backgroundColor: `${newLabel.color ? newLabel.color : ''}` }}
+                                    className="color-preview"></span>
+                                <TextField
+                                    name="text"
+                                    autoComplete="off"
+                                    placeholder={showAddLabelError ? "Please enter label + color" : "Enter label"}
+                                    onChange={this.handleInput}
+                                />
                             </form>
                             <Colors onChangeColor={this.setNewLabelColor} />
                         </div>}

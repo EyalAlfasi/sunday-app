@@ -14,20 +14,20 @@ export class MainSideBar extends Component {
         this.setState({ isShowUserNotification: !this.state.isShowUserNotification })
     }
     render() {
-        const { onLogOut, user, onCleanNotifications,onUpdateNotifications } = this.props;
+        const { onLogOut, user, onCleanNotifications, onUpdateNotifications } = this.props;
         const notifications = user.notifications?.filter(notification => !notification.isRead)
 
-        return <div className="main-sidebar-inner-container flex column">
+        return <div className="main-sidebar-container flex column relative">
             <div className="main-side-bar-top flex column align-center">
                 <Link to="/">
                     <img className="sunday-icon" src={sundayIcon} alt="sunday-logo-icon" />
                 </Link>
-                <UserNotifications notifications={notifications} onCleanNotifications={onCleanNotifications}/>
+                <UserNotifications notifications={notifications} onCleanNotifications={onCleanNotifications} />
                 {/* <div className="relative">
                     {user.notifications && <span className="count-notifications">{notifications.length}</span>}
                     <NotificationsNoneIcon data-tip data-for="notifications" onClick={this.onToggleUserNotifications} />
                 </div> */}
-                    {/* {this.state.isShowUserNotification && <UserNotification notifications={user.notifications} onCleanNotifications={onCleanNotifications} user={user} onUpdateNotifications={onUpdateNotifications} onToggleUserNotifications={this.onToggleUserNotifications} />} */}
+                {/* {this.state.isShowUserNotification && <UserNotification notifications={user.notifications} onCleanNotifications={onCleanNotifications} user={user} onUpdateNotifications={onUpdateNotifications} onToggleUserNotifications={this.onToggleUserNotifications} />} */}
 
                 <Link to={`/user/${user._id}/general`}>
                     <div className="greet-user">
