@@ -47,10 +47,13 @@ export class _BoardPreview extends Component {
         const { board, onChangeGroupTitle, loggedInUser } = this.props
         await onChangeGroupTitle({ board, groupId, groupTitle, user: loggedInUser })
     }
+
     onChangeBoardMemebrs = async (memberData, type) => {
+        console.log(memberData);
         const { changeBoardMemebrs, loggedInUser, board } = this.props;
         await changeBoardMemebrs(memberData, board, type, loggedInUser);
     }
+
     onRemoveGroup = async (group) => {
         const { removeGroup, board, loggedInUser } = this.props;
         await removeGroup(board, group, loggedInUser)
@@ -96,7 +99,7 @@ export class _BoardPreview extends Component {
             boardToUpdate.groups = groups
             this.setState({ board: boardToUpdate })
             await changeCardIdx(boardToUpdate, result)
-        }
+        } 
     }
     changeBoardView = (ev) => {
         const { value } = ev.target

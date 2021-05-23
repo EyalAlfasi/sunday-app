@@ -394,16 +394,14 @@ function updateTaskMembers(memberId, sign, board, cardToUpdate, groupId, user) {
 function changeBoardMemebrs(memberData, board, type, user) {
 
     const boardToUpdate = JSON.parse(JSON.stringify(board));
-    var activityText;
-    var notificationTxt;
+    var activityText
+    var notificationTxt
     var member
 
-
     if (type === 'remove') {
-        const membersToRemove = boardToUpdate.members.find(member => member._id === memberData)
+        member= boardToUpdate.members.find(member => member._id === memberData)
         if (memberData !== user._id) notificationTxt = `${user.fullname} remove you from '${board.title}' `
-        member = boardToUpdate.members.find(member => member._id === memberData)
-        activityText = `removed ${membersToRemove.fullname} from this board`
+        activityText = `removed ${member.fullname} from this board`
         boardToUpdate.members = boardToUpdate.members.filter(member => member._id !== memberData)
         boardToUpdate.groups = boardToUpdate.groups.map(group => {
             group.cards = group.cards.map(card => {
@@ -412,7 +410,7 @@ function changeBoardMemebrs(memberData, board, type, user) {
             })
             return group;
         })
-
+        
     } else {
         activityText = `added ${memberData.fullname} to this board`
         if (memberData._id !== user._id) notificationTxt = `${user.fullname} add you to '${board.title}'`
@@ -425,7 +423,7 @@ function changeBoardMemebrs(memberData, board, type, user) {
     httpService.put('board', boardToUpdate)
     if (notificationTxt) return { member, notificationTxt, user }
     // if (notificationTxt) return { member: user, notificationTxt, user: memberData }
-
+    
 }
 
 async function changeCardLabels(board, cardToUpdate, groupId, label, labelType, user) {

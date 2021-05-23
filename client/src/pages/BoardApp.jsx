@@ -58,12 +58,16 @@ export const BoardApp = ({ match, history }) => {
         }
         socketService.setup()
         socketService.emit('userSocket', loggedInUser)
-        socketService.on('boardUpdate', updateBoards)
+        socketService.on('boardUpdate', updateBoardsInStore)
         socketService.on('updateUser', updateUserNotifications)
         const { boardId } = match.params;
         if (!boardId) dispatch(loadBoards(loggedInUser._id))
         else if (!boards.length && boardId) dispatch(loadBoards(loggedInUser._id))
         if (boardId) dispatch(getBoardById(boardId))
+    }
+
+    const updateBoardsInStore=(board)=>{
+        updateBoards(board)
     }
 
     const onDeleteBoard = async (boardId, boardIdx) => {

@@ -7,10 +7,10 @@ import { useSelector } from 'react-redux';
 export const BoardSideBarItem = ({ board, onDeleteBoard, user, idx }) => {
 
     const [isDelete, setIsDelete] = useState(false)
-    const currBoardId = useSelector(state => state.boardReducer.board._id)
+    const currBoardId = useSelector(state => state.boardReducer.board?._id)
 
     return (
-        <div className={`board-sidebar-item ${board._id === currBoardId ? 'selected' : ''}`} >
+        <div className={`board-sidebar-item ${ board._id === currBoardId ? 'selected' : ''}`} >
             <Link to={`/board/${board._id}`}>{board.title}</Link>
             {(user._id === board.createdBy._id) && <DeleteIcon onClick={() => setIsDelete(true)} />}
             {isDelete && <ConfirmModal id={board._id} arg={idx}

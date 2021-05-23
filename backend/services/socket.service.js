@@ -10,6 +10,7 @@ function emit({ type, data }) {
 }
 
 function emitToMyBoard(type, data) {
+    console.log('hyereeeeee');
     gIo.emit(type, data)
 }
 
