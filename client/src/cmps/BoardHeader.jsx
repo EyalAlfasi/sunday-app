@@ -49,7 +49,7 @@ export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMem
                 <span className="board-member-status top-section-item" data-tip data-for="members"
                     onClick={toggleMembersModal}> <PeopleOutlineIcon />/{board.members.length}</span>
                 {isShowBoardMember && <BoardMembers board={board}
-                    onChangeBoardMemebrs={onChangeBoardMemebrs} onCloseModalMembers={toggleMembersModal} />}
+                    changeBoardMemebrs={onChangeBoardMemebrs} onCloseModalMembers={toggleMembersModal} />}
 
                 <span
                     className="activity-display top-section-item"

@@ -65,6 +65,8 @@ export function updateBoards(board) {
             type: 'UPDATE_BOARDS',
             board
         }
+        console.log(dispatch);
+        setBoard(dispatch, board)
         dispatch(action)
     }
 }
@@ -183,9 +185,13 @@ export function deleteCard(cardToDelete) {
     }
 }
 export function changeBoardMemebrs(memberData, board, type, user) {
-    return async () => {
+    return async (dispatch) => {
         try {
             const notification = await boardService.changeBoardMemebrs(memberData, board, type, user)
+
+            //for later use
+            // const { boardToUpdate } = notification
+            // setBoard(dispatch, boardToUpdate)
             const userToUpdate = await userService.updateNotifications(notification)
             socketService.emit('onUpdateUser', userToUpdate)
         } catch (err) {

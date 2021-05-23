@@ -56,6 +56,17 @@ export const BoardPreview = (props) => {
         dispatch(removeGroup(board, group, loggedInUser))
         dispatch(setMsg('Group Successfully Removed'))
     }
+    // onChangeBoardMemebrs = async (memberData, type) => {
+    //     console.log(memberData);
+    //     const { changeBoardMemebrs, loggedInUser, board } = this.props;
+    //     await changeBoardMemebrs(memberData, board, type, loggedInUser);
+    // }
+
+    // onRemoveGroup = async (group) => {
+    //     const { removeGroup, board, loggedInUser } = this.props;
+    //     await removeGroup(board, group, loggedInUser)
+    //     this.props.setMsg('Group Successfully Removed')
+    // }
     const onDragStart = () => {
         dispatch(dragStart())
     }
