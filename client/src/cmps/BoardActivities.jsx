@@ -5,7 +5,6 @@ import moment from 'moment'
 import SearchIcon from '@material-ui/icons/Search';
 
 export const BoardActivities = ({ activityFilterText, activities, content, user, title, clear, handleChange }) => {
-
     return <div>
         {title && <div className="activity-filter">
             <h2 className="activities-board-title"><span>{title}</span> Activities</h2>
@@ -25,7 +24,7 @@ export const BoardActivities = ({ activityFilterText, activities, content, user,
         </div>}
         <span>{content}</span>
         <div className="activity-list">
-            {activities.map(activity => {
+            {activities.length && activities.map(activity => {
                 return <div key={activity.id} className="activity">
                     <div>
                         <Link to={`/user/${activity.byMember._id}`}>  {activity.byMember.imgUrl ? <img src={activity.byMember.imgUrl} className="user-thumbnail" alt="avatar" /> :

@@ -123,10 +123,10 @@ export function addGroup(board, user) {
         }
     }
 }
-export function addBoard(boardTitle, user) {
+export function addBoard(boardTitle, userId) {
     return async (dispatch) => {
         try {
-            const board = await boardService.addBoard(boardTitle, user)
+            const board = await boardService.addBoard(boardTitle, userId)
             const action = {
                 type: 'ADD_BOARD',
                 board
@@ -137,6 +137,8 @@ export function addBoard(boardTitle, user) {
         }
     }
 }
+
+//TODO: FIX
 export function changeGroupIdx(board, result) {
     return async (dispatch) => {
         try {

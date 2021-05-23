@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 export const BoardSideBarItem = ({ board, onDeleteBoard, user, idx }) => {
 
     const [isInDeleteMode, setIsInDeleteMode] = useState(false)
-    const currBoardId = useSelector(state => state.boardReducer.board._id)
+    const currBoardId = useSelector(state => state.boardReducer.board?._id)
 
     return (
         !board || !currBoardId ? null : <div className={`board-sidebar-item ${board._id === currBoardId ? 'selected' : ''}`} >

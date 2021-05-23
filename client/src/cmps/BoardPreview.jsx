@@ -15,9 +15,7 @@ import { NoResultsPlaceholder } from './NoResultsPlaceholder';
 
 
 export const BoardPreview = (props) => {
-    const [view, setView] = useState('board')
     const [filterBy, setFilterBy] = useState(null)
-    const [isDelete, setIsDelete] = useState(false)
     const [isShowDashboard, setIsShowDashboard] = useState(false)
 
     const board = useSelector(state => state.boardReducer.board)
@@ -251,7 +249,7 @@ export const BoardPreview = (props) => {
                 onChangeBoardMemebrs={onChangeBoardMemebrs}
                 onSetFilter={onSetFilter}
             />
-            {isShowDashboard && <DashBoard board={board} />}
+            {/* {isShowDashboard && <DashBoard board={board} />}
             {!isShowDashboard &&
                 <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
                     <div
@@ -280,7 +278,7 @@ export const BoardPreview = (props) => {
                             )}
                         </Droppable>
                     </div>
-                </DragDropContext>}
+                </DragDropContext>} */}
         </div>
     )
 }

@@ -44,16 +44,11 @@ async function getBoard(req, res) {
 async function addBoard(req, res) {
     try {
         const board = req.body
-        const user = req.session.user
-        board.createdBy = {
-            _id: ObjectId(user._id),
-            fullname: user.fullname,
-            imgUrl: user.imgUrl || null
-        }
-        board.members = [{ ...board.createdBy }]
-        board.groups[0].createdBy = { ...board.createdBy }
-        board.groups[0].cards[0].members = [{ ...board.createdBy }]
-        board.groups[0].cards[0].createdBy = { ...board.createdBy }
+        // const user = req.session.user
+        // board.members = [{ ...board.createdBy }]
+        // board.groups[0].createdBy = { ...board.createdBy }
+        // board.groups[0].cards[0].members = [{ ...board.createdBy }]
+        // board.groups[0].cards[0].createdBy = { ...board.createdBy }
         const newBoard = await boardService.add(board)
         res.send(newBoard)
     } catch (err) {

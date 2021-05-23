@@ -16,7 +16,6 @@ function delay(ms = 1500) {
     })
 }
 
-
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);

@@ -140,14 +140,14 @@ function getBoardIdByIdx(boardIdx, boards) {
 
 
 
-async function addBoard(boardTitle, user) {
+async function addBoard(boardTitle, userId) {
     try {
         const boardToAdd = {
             title: boardTitle,
-            createdBy: {},
-            members: [],
+            createdBy: userId,
+            members: [userId],
             activities: [],
-            groups: [_createDefaultGroup(user)]
+            groups: [_createDefaultGroup(userId)]
         }
         // return await storageService.post('boards', boardToAdd)
         return httpService.post('board', boardToAdd)
@@ -156,7 +156,7 @@ async function addBoard(boardTitle, user) {
 
     }
 }
-
+//TODO: use recursion func
 function _findGroupById(board, groupId) {
     const group = board.groups.find(group => groupId === group.id)
     return group
@@ -299,7 +299,7 @@ async function removeGroup(board, groupToUpdate, user) {
 
 async function changeGroupIdx(board, result) {
     try {
-        
+
         // console.log(board);
         // const sourceGroup = boardToUpdate.groups[source.index]
         // boardToUpdate.groups[source.index] = boardToUpdate.groups[destination.index]
@@ -396,7 +396,7 @@ function changeBoardMemebrs(memberData, board, type, user) {
     var member
 
     if (type === 'remove') {
-        member= boardToUpdate.members.find(member => member._id === memberData)
+        member = boardToUpdate.members.find(member => member._id === memberData)
         if (memberData !== user._id) notificationTxt = `${user.fullname} remove you from '${board.title}' `
         activityText = `removed ${member.fullname} from this board`
         boardToUpdate.members = boardToUpdate.members.filter(member => member._id !== memberData)
@@ -407,7 +407,7 @@ function changeBoardMemebrs(memberData, board, type, user) {
             })
             return group;
         })
-        
+
     } else {
         activityText = `added ${memberData.fullname} to this board`
         if (memberData._id !== user._id) notificationTxt = `${user.fullname} add you to '${board.title}'`
@@ -420,7 +420,7 @@ function changeBoardMemebrs(memberData, board, type, user) {
     httpService.put('board', boardToUpdate)
     if (notificationTxt) return { member, notificationTxt, user }
     // if (notificationTxt) return { member: user, notificationTxt, user: memberData }
-    
+
 }
 
 async function changeCardLabels(board, cardToUpdate, groupId, label, labelType, user) {
@@ -564,18 +564,12 @@ function _createBoardActivity(user, txt) {
 
 
 
-function _createCard(cardTitle, user) {
+function _createCard(cardTitle, userId) {
     return {
         id: utilService.makeId(),
         title: cardTitle,
         updates: [],
-        members: [
-            {
-                "_id": user._id,
-                "fullname": user.fullname,
-                "imgUrl": user.imgUrl ? user.imgUrl : null
-            }
-        ],
+        members: [userId],
         status:
             { text: 'No status yet', color: '#cccccc', id: utilService.makeId() },
         priority:
@@ -585,23 +579,15 @@ function _createCard(cardTitle, user) {
             startDate: '',
             endDate: ''
         },
-        createdBy: {
-            _id: user._id,
-            fullname: user.fullname,
-            imgUrl: user.imgUrl ? user.imgUrl : null
-        },
+        createdBy: userId
     }
 }
 
-function _createDefaultGroup(user) {
+function _createDefaultGroup(userId) {
     return {
         id: utilService.makeId(),
         title: "New group",
-        createdBy: {
-            "_id": user._id,
-            "fullname": user.fullname,
-            "imgUrl": user.imgUrl ? user.imgUrl : null
-        },
+        createdBy: userId,
         createdAt: Date.now(),
         statuses: [
             { text: 'Done', color: '#00ca72', id: utilService.makeId() },
@@ -615,7 +601,7 @@ function _createDefaultGroup(user) {
             { text: 'Urgent', color: '#ff2f2f', id: utilService.makeId() }
         ],
         cards: [
-            _createCard('New item', user)
+            _createCard('New item', userId)
         ],
         style: { color: "#0085ff" }
     }

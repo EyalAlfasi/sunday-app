@@ -1,5 +1,5 @@
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { EditableElement } from './EditableElement';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import ReactTooltip from "react-tooltip";
@@ -8,12 +8,16 @@ import { BoardMembers } from './BoardMembers';
 import { BoardActivities } from './BoardActivities';
 import { boardService } from '../services/boardService';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { userService } from '../services/userService';
+import { getUserById } from '../store/actions/userAction';
+import { useGetUser } from '../custom-hooks/useGetUser';
 
-export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMemebrs, onSetFilter, changeBoardView, user }) => {
+export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMemebrs, onSetFilter, changeBoardView, /* user */ }) => {
 
     const [isShowBoardMember, setIsShowBoardMember] = useState(false)
     const [isShowActivities, setIsShowActivities] = useState(false)
     const [activityFilterText, setActivityFilterText] = useState('')
+    const user = useGetUser(board.createdBy)
 
     const toggleMembersModal = () => {
         setIsShowBoardMember(!isShowBoardMember)
@@ -34,16 +38,18 @@ export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMem
         })
         return filteredActivities
     }, [board.activities, activityFilterText])
-
     const unReadActivities = useMemo(() => activitiesForDisplay.filter(activity => !activity.isRead), [activitiesForDisplay])
     const activities = useMemo(() => activitiesForDisplay.filter(activity => activity.isRead), [activitiesForDisplay])
+    console.log(unReadActivities);
+    console.log(activities);
     if (!board) return <h1>Loading...</h1>
+
 
     return <section className="board-header flex column space-between">
         <div className="flex align-center board-header-top-section">
             <div className="board-name-and-owner">
                 <h2><EditableElement onChangeTitle={onChangeTitle}>{board.title}</EditableElement></h2>
-                <h4>{''}Owner :{board.createdBy.fullname}</h4>
+                <h4>{''}Owner :{user?.fullname}</h4>
             </div>
             <div className="flex space-between relative">
                 <span className="board-member-status top-section-item" data-tip data-for="members"

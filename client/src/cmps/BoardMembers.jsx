@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { Link } from 'react-router-dom'
@@ -7,12 +7,23 @@ import { ClickAwayListener } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { query } from '../store/actions/userAction'
 import { BoardSearch } from './BoardSearch.jsx';
+import { userService } from '../services/userService.js';
 
 export const _BoardMembers = ({ changeBoardMemebrs, board, onCloseModalMembers, query }) => {
 
 
     const [users, setUsers] = useState([])
+    const [boardMembers, setBoardMembers] = useState([])
 
+
+    useEffect(() => {
+        initialBoardMembers()
+    }, [users])
+
+    const initialBoardMembers = async () => {
+        const members = await Promise.all(board.members.map(async member => await userService.getUserById(member)))
+        setBoardMembers(members)
+    }
 
     const onSetFilter = async (txt) => {
         if (!txt) {
@@ -58,7 +69,7 @@ export const _BoardMembers = ({ changeBoardMemebrs, board, onCloseModalMembers, 
             </div>
             <div>
                 <h3>Board Members</h3>
-                {board.members.map(member => {
+                {boardMembers.map(member => {
                     return <div key={member._id} className="flex align-center space-between member-row" >
                         <Link to={`/user/${member._id}/general`} >
                             <div className="flex align-center space-between">

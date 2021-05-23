@@ -82,7 +82,7 @@ export const BoardApp = ({ match, history }) => {
 
     const onAddBoard = async (boardTitle) => {
         setAction('add')
-        await dispatch(addBoard(boardTitle, loggedInUser))
+        await dispatch(addBoard(boardTitle, loggedInUser._id))
         dispatch(setMsg('Board Successfully Added'))
     }
 
