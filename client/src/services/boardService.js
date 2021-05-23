@@ -298,17 +298,14 @@ async function removeGroup(board, groupToUpdate, user) {
 }
 
 async function changeGroupIdx(board, result) {
-    const { destination, source } = result
     try {
-        const boardToUpdate = JSON.parse(JSON.stringify(board))
-        const newGroups = boardToUpdate.groups.map((group, idx, groups) => {
-            if (idx === source.index) return groups[destination.index]
-            if (idx === destination.index) return groups[source.index]
-            else return group
-        })
-        boardToUpdate.groups = newGroups;
-        httpService.put('board', boardToUpdate)
-        return boardToUpdate
+        
+        // console.log(board);
+        // const sourceGroup = boardToUpdate.groups[source.index]
+        // boardToUpdate.groups[source.index] = boardToUpdate.groups[destination.index]
+        // boardToUpdate.groups[destination.index] = sourceGroup
+        // console.log(boardToUpdate.groups);
+        return await httpService.put('board', board)
     } catch (err) {
         throw err
     }

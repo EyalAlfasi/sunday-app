@@ -26,7 +26,7 @@ import { ConfirmModal } from './ConfirmModal.jsx'
 export const CardPreview = ({ idx, group, card }) => {
     const [areMembersShown, setAreMembersShown] = useState(false)
     const [isDateShown, setIsDateShown] = useState(false)
-    const [isDeleteModeOn, setIsDeleteModeOn] = useState(false)
+    const [isInDeleteMode, setIsInDeleteMode] = useState(false)
 
     const dispatch = useDispatch()
     const board = useSelector(state => state.boardReducer.board)
@@ -52,8 +52,6 @@ export const CardPreview = ({ idx, group, card }) => {
     }
 
     const onChangeCardLabels = (label, labelType) => {
-        console.log('hi1');
-        console.log('hi2');
         dispatch(changeCardLabels(board, card, group.id, label, labelType, loggedInUser))
     }
     const onAddCardLabel = (label, labelGroup) => {
@@ -78,7 +76,7 @@ export const CardPreview = ({ idx, group, card }) => {
         return days
     }, [card.dueDate])
 
-    const boardMembers = useMemo(() => board.members.filter(boardMember => {
+    const availableBoardMembers = useMemo(() => board.members.filter(boardMember => {
         if (!card.members.length) return true;
         const mutualMember = card.members.find(member => {
             return member._id === boardMember._id
@@ -86,7 +84,6 @@ export const CardPreview = ({ idx, group, card }) => {
         return Boolean(mutualMember)
     }), [board.members, card.members])
     const cardMembersForDisplay = (card.members.length > 2) ? card.members.slice(0, 2) : card.members;
-
     return (
         <>
             <Draggable
@@ -103,7 +100,7 @@ export const CardPreview = ({ idx, group, card }) => {
                         <div style={{ backgroundColor: group.style.color }}></div>
                         <div className="card-title">
                             <EditableElement onChangeTitle={onChangeTitle}>{card.title}</EditableElement>
-                            <Delete onClick={() => setIsDeleteModeOn(true)} />
+                            <Delete onClick={() => setIsInDeleteMode(true)} />
                         </div>
                         <div>
                             <Link to={`/board/${board._id}/card/${card.id}`}>
@@ -138,7 +135,7 @@ export const CardPreview = ({ idx, group, card }) => {
                             </div>
                             {areMembersShown &&
                                 <TaskMembersModal
-                                    boardMembers={boardMembers}
+                                    availableBoardMembers={availableBoardMembers}
                                     cardMembers={card.members}
                                     changeTaskMembers={onChangeTaskMembers}
                                     onCloseModal={() => setAreMembersShown(!areMembersShown)}
@@ -198,12 +195,13 @@ export const CardPreview = ({ idx, group, card }) => {
                 )}
             </Draggable>
 
-            {isDeleteModeOn &&
+            {isInDeleteMode &&
                 <ConfirmModal
                     id={card.id}
                     arg={group}
-                    deleteFunc={onDeleteCard}
-                    close={() => setIsDeleteModeOn(false)}
+                    onApprove={onDeleteCard}
+                    close={() => setIsInDeleteMode(false)}
+                    isInDeleteMode={isInDeleteMode}
                     title={card.title}
                     type={'Card'}
                 />}

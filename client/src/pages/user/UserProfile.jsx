@@ -8,6 +8,7 @@ import { utilService } from '../../services/utilService'
 import { logOut, getUserById } from '../../store/actions/userAction'
 import { getBoardsByUserId } from '../../store/actions/boardAction'
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
+import { boardService } from '../../services/boardService'
 
 export class _UserProfile extends Component {
 
@@ -22,14 +23,14 @@ export class _UserProfile extends Component {
     }
 
     async componentDidMount() {
-        const { loggedInUser, getBoardsByUserId, getUserById } = this.props
+        const { loggedInUser, getUserById } = this.props
         if (!loggedInUser) {
             this.props.history.push('/')
             return
         }
         const { userId } = this.props.match.params
         const user = await getUserById(userId);
-        const boards = await getBoardsByUserId(userId);
+        const boards = await boardService.query(userId);
         this.setState({ user, boards }, () => {
             if (loggedInUser._id === this.state.user._id) {
                 this.setState({ isMyProfile: true });
@@ -44,13 +45,8 @@ export class _UserProfile extends Component {
         if (!user || !boards) return null
 
         return <div>
-            <div className="main-sidebar-container mobile">
-                <MainSideBar onLogOut={this.onLogOut} user={loggedInUser} />
-            </div>
             <div className="user-profile-main-container">
-                <div className="main-sidebar-container desktop">
-                    <MainSideBar onLogOut={this.onLogOut} user={loggedInUser} />
-                </div>
+                <MainSideBar onLogOut={this.onLogOut} user={loggedInUser} />
                 <div className="user-profile-panel">
                     <div className="user-profile-header">
                         <Link to={'/board'} className="link"><ArrowBackOutlinedIcon /></Link>

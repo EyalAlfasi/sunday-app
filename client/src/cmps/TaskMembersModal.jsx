@@ -5,7 +5,7 @@ import { utilService } from '../services/utilService.js';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 
-export function TaskMembersModal({ boardMembers, cardMembers, changeTaskMembers, onCloseModal}) {
+export function TaskMembersModal({ availableBoardMembers, cardMembers, changeTaskMembers, onCloseModal}) {
 
     return (<ClickAwayListener onClickAway={onCloseModal}>
         <div className="members-modal-basic" >
@@ -27,7 +27,7 @@ export function TaskMembersModal({ boardMembers, cardMembers, changeTaskMembers,
             </div>
             <div>
                 <h3>Board Members</h3>
-                {boardMembers.map(member => {
+                {availableBoardMembers.map(member => {
                     return <div key={member._id} className="flex align-center space-between member-row">
                         <Link to={`/user/${member._id}/general`} >
                             <div className="flex align-center">

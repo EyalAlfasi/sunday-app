@@ -33,10 +33,10 @@ export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMem
             return filterRegex.test(activity.txt) || filterRegex.test(activity.byMember.fullname)
         })
         return filteredActivities
-    },[board,activityFilterText])
+    }, [board.activities, activityFilterText])
 
-    const unReadActivities = useMemo(() => activitiesForDisplay.filter(activity => !activity.isRead),[activitiesForDisplay])
-    const activities = useMemo(() => activitiesForDisplay.filter(activity => activity.isRead),[activitiesForDisplay])
+    const unReadActivities = useMemo(() => activitiesForDisplay.filter(activity => !activity.isRead), [activitiesForDisplay])
+    const activities = useMemo(() => activitiesForDisplay.filter(activity => activity.isRead), [activitiesForDisplay])
     if (!board) return <h1>Loading...</h1>
 
     return <section className="board-header flex column space-between">

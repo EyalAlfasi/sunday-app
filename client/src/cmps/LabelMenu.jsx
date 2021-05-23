@@ -47,7 +47,6 @@ export class LabelMenu extends Component {
             return
         }
         this.setState({ currLabel: newLabel }, () => {
-            console.log(this.state);
             this.props.onSaveLabel(newLabel, this.props.labelName);
             this.toggleMenu();
         });

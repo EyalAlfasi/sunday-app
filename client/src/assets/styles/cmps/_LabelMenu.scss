@@ -112,9 +112,8 @@
         right: 0px;
         border-width: 0;
         border-style: solid;
-        background: #dbdbdb;
+        background: #00000031;
         display: block;
-        /*border-radius:3px 0 0 0;*/
         border-color: transparent #fff transparent #fff;
 
         -webkit-transition: border-width 0.2s ease-out;
@@ -125,7 +124,7 @@
     }
     &:hover {
         & .fold {
-            border-width: 0px 12px 12px 0px;
+            border-width: 0px 10px 10px 0px;
         }
     }
 }

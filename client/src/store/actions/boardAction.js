@@ -136,10 +136,14 @@ export function addBoard(boardTitle, user) {
     }
 }
 export function changeGroupIdx(board, result) {
-    console.log(board, result);
-    return async () => {
+    return async (dispatch) => {
         try {
-            return await boardService.changeGroupIdx(board, result)
+            const action = {
+                type: 'SET_CURR_BOARD',
+                board
+            }
+            dispatch(action)
+            await boardService.changeGroupIdx(board, result)
         } catch (err) {
             console.log(err);
         }
@@ -147,7 +151,16 @@ export function changeGroupIdx(board, result) {
 }
 export function changeCardIdx(board, result) {
     return async (dispatch) => {
-        return await boardService.changeCardIdx(board, result)
+        try {
+            const action = {
+                type: 'SET_CURR_BOARD',
+                board
+            }
+            dispatch(action)
+            await boardService.changeCardIdx(board)
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
 export function deleteCard(cardToDelete) {
@@ -203,8 +216,6 @@ export function changeCardLabels(board, card, groupId, label, labelType, user) {
     return async (dispatch) => {
         try {
             const boardToUpdate = await boardService.changeCardLabels(board, card, groupId, label, labelType, user)
-            console.log('hi');
-            console.log(boardToUpdate);
             const action = {
                 type: 'SET_CURR_BOARD',
                 board: boardToUpdate
@@ -333,7 +344,7 @@ export function addCardUpdate(cardUpdate, board, card) {
         }
     }
 }
-export function onDragStart() {
+export function dragStart() {
     return (dispatch) => {
         const action = {
             type: 'ON_DRAG'
@@ -341,7 +352,7 @@ export function onDragStart() {
         dispatch(action)
     }
 }
-export function onDragEnd() {
+export function dragEnd() {
     return (dispatch) => {
         const action = {
             type: 'ON_DRAG_END'

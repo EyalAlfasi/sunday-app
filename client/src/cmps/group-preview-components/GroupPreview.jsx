@@ -120,6 +120,7 @@ export const GroupPreview = ({ onAddCard, group, onChangeGroupTitle, onDrag, onD
                                 value={cardTitle}
                                 onChange={handleChange}
                             />
+                            <button type="submit" className="add-card-btn">Add</button>
                         </form>
                         <div style={{ backgroundColor: '#E6E9EF' }}></div>
                     </div>

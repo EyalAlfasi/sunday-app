@@ -1,44 +1,44 @@
-import React, { Component, useEffect, useState } from 'react'
-import ReactDOM from 'react-dom';
+import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { Modal } from './reuseable-basic-components/Modal';
+import { makeStyles } from '@material-ui/core';
 
-export const ConfirmModal = ({ title, type, id, arg, close, deleteFunc }) => {
-  const [mounted, setIsMounted] = useState(false)
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-  const modalRoot = document.getElementById('modal-root')
-  const modalTemplate = <div className="modal-wrapper" onClick={() => setIsMounted(false)}>
-    <CSSTransition in={mounted} classNames="fade" timeout={200} onExited={close}>
-      <div className="modal-content" onClick={ev => ev.stopPropagation()}>
-        <h3>{`Are you sure You want to delete this ${type}?`}</h3>
-        <p>{`(${title})`}</p>
-        <div className="btn-confirm">
-          <Button
-            onClick={() => {
-              setIsMounted(false)
-              deleteFunc(id, arg)
-            }}
-            variant="contained"
-            color="secondary"
-            startIcon={<DeleteIcon />}
-          >
-            Delete
-          </Button>
-          <Button
-            onClick={() => setIsMounted(false)}
-            variant="contained"
-            color="default"
-          >
-            Cancel
-          </Button>
+const useStyles = makeStyles((theme) => ({
+  deleteBtn: {
+    backgroundColor: "#fb275d",
+    boxShadow: "none",
+    color: "#fff",
+    "&:hover": {
+      backgroundColor: "#ff4c79",
+      boxShadow: "none",
+    }
+  }
+}))
 
-        </div>
+export const ConfirmModal = ({ title, type, id, arg, close, onApprove, isInDeleteMode }) => {
+  const classes = useStyles()
+  return (
+    <Modal
+      open={isInDeleteMode}
+      onClose={close}
+    >
+      <h3>{`Are you sure You want to delete this ${type}?`}</h3>
+      <p>{`(${title})`}</p>
+      <div className="btn-confirm">
+        <Button
+          onClick={() => {
+            onApprove(id, arg)
+          }}
+          variant="contained"
+          className={classes.deleteBtn}
+          startIcon={<DeleteIcon />}
+        >
+          Delete
+          </Button>
       </div>
-    </CSSTransition>
-  </div>
+    </Modal>
+  )
 
-  return ReactDOM.createPortal(modalTemplate, modalRoot)
 }

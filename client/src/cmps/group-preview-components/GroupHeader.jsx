@@ -21,7 +21,8 @@ export const GroupHeader = ({ group, color, onSetGroupSort, provided, onChangeTi
             />
             {isInDeleteMode && <ConfirmModal
                 id={group}
-                deleteFunc={onRemoveGroup}
+                onApprove={onRemoveGroup}
+                isInDeleteMode={isInDeleteMode}
                 close={() => setIsInDeleteMode(false)}
                 title={group.title}
                 type={'Group'}

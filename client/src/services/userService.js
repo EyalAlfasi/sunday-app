@@ -79,7 +79,7 @@ async function updateNotifications({ member, notificationTxt, user }) {
     } else {
         memberToAdd.notifications = [notification, ...memberToAdd.notifications]
     }
-    return update(memberToAdd)
+    return await update(memberToAdd)
 }
 
 function updateReadNotifications(memberToUpdate) {

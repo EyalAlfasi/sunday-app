@@ -6,6 +6,7 @@ import ArrowForwardOutlinedIcon from '@material-ui/icons/ArrowForwardOutlined';
 import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
+import { boardService } from '../../services/boardService';
 
 
 export class _GeneralUserInfo extends Component {
@@ -15,7 +16,7 @@ export class _GeneralUserInfo extends Component {
 
     async componentDidMount() {
         const { user } = this.props;
-        const boards = await this.props.getBoardsByUserId(user._id);
+        const boards = await boardService.query(user._id);
         this.setState({ boards });
     }
 
