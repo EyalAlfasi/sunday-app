@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { userService } from '../services/userService'
 
 export const useGetUser = (userId) => {
+   
     const [user, setUser] = useState(null)
-    
+
     useEffect(() => {
         fetchUser()
     }, [])

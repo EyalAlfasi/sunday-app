@@ -60,7 +60,7 @@ function getLoggedinUser() {
     return JSON.parse(sessionStorage.getItem('loggedinUser'))
 }
 
-async function updateNotifications({ member, notificationTxt, user }) {
+async function updateNotifications({ memberId, notificationTxt, user }) {
     const notification = {
         id: utilService.makeId(),
         notificationTxt,
@@ -73,7 +73,7 @@ async function updateNotifications({ member, notificationTxt, user }) {
         }
     }
 
-    const memberToAdd = await getUserById(member._id)
+    const memberToAdd = await getUserById(memberId)
     if (!memberToAdd.notifications) {
         memberToAdd.notifications = [notification]
     } else {

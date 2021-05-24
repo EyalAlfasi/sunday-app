@@ -22,6 +22,8 @@ import { ClickAwayListener } from '@material-ui/core';
 import { Link } from 'react-router-dom'
 import { setMsg } from '../store/actions/userAction.js'
 import { ConfirmModal } from './ConfirmModal.jsx'
+import { useGetUser } from '../custom-hooks/useGetUser';
+import { MemberForDisplay } from './members-components/MemberForDisplay';
 
 export const CardPreview = ({ idx, group, card }) => {
     const [areMembersShown, setAreMembersShown] = useState(false)
@@ -39,8 +41,8 @@ export const CardPreview = ({ idx, group, card }) => {
         await dispatch(deleteCard({ groupId: group.id, board, cardId, user: loggedInUser }))
         dispatch(setMsg('Card Successfully Removed'))
     }
-    const onChangeTaskMembers = (memberId, sign) => {
-        dispatch(changeTaskMembers(memberId, sign, board, card, group.id, loggedInUser))
+    const onChangeTaskMembers = (member, sign) => {
+        dispatch(changeTaskMembers(member, sign, board, card, group.id, loggedInUser))
     }
     const onChangeCardDates = (dates) => {
         if (dates.startDate && dates.endDate) {
@@ -76,13 +78,13 @@ export const CardPreview = ({ idx, group, card }) => {
         return days
     }, [card.dueDate])
 
-    const availableBoardMembers = useMemo(() => board.members.filter(boardMember => {
-        if (!card.members.length) return true;
-        const mutualMember = card.members.find(member => {
-            return member._id === boardMember._id
-        });
-        return Boolean(mutualMember)
+    const availableBoardMembers = useMemo(() => board.members.filter(boardMemberId => {
+        // if (!card.members.length) return true;
+        const mutualMember= card.members.find(cardMemberId => cardMemberId === boardMemberId)
+        if(mutualMember)return false
+        else return true
     }), [board.members, card.members])
+
     const cardMembersForDisplay = (card.members.length > 2) ? card.members.slice(0, 2) : card.members;
     return (
         <>
@@ -118,20 +120,12 @@ export const CardPreview = ({ idx, group, card }) => {
                                 </span>}
                             <div className={`flex justify-center align-center ${card.members.length >= 2 ? 'multiple-members-display' : ''}`}>
                                 {(!cardMembersForDisplay.length) && <PersonIcon className="member-empty-avatar" />}
-                                {cardMembersForDisplay.map((member) => (member.imgUrl) ?
-                                    <img
-                                        key={member._id}
-                                        src={member.imgUrl}
-                                        className="user-thumbnail"
-                                        alt=""
-                                    /> :
-                                    <h5
-                                        style={{ backgroundColor: group.style.color }}
-                                        key={member._id}
-                                        className="user-thumbnail">
-                                        {(utilService.getNameInitials(member.fullname).toUpperCase())}
-                                    </h5>)
-                                }
+                                {cardMembersForDisplay.map(memberId =>
+                                    <MemberForDisplay
+                                        key={memberId}
+                                        backgroundColor={group.style.backgroundColor}
+                                        memberId={memberId} />)}
+
                             </div>
                             {areMembersShown &&
                                 <TaskMembersModal

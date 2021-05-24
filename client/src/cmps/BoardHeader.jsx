@@ -5,27 +5,28 @@ import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import ReactTooltip from "react-tooltip";
 import { BoardFilter } from './BoardFilter';
 import { BoardMembers } from './BoardMembers';
-import { BoardActivities } from './BoardActivities';
+import { BoardActivitiesList } from './board-activities-components/BoardActivitiesList';
 import { boardService } from '../services/boardService';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { userService } from '../services/userService';
-import { getUserById } from '../store/actions/userAction';
 import { useGetUser } from '../custom-hooks/useGetUser';
+import { useDispatch } from 'react-redux';
 
-export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMemebrs, onSetFilter, changeBoardView, /* user */ }) => {
+export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMemebrs, onSetFilter, changeBoardView, loggedInUser }) => {
 
     const [isShowBoardMember, setIsShowBoardMember] = useState(false)
     const [isShowActivities, setIsShowActivities] = useState(false)
     const [activityFilterText, setActivityFilterText] = useState('')
-    const user = useGetUser(board.createdBy)
+    const boardOwner = useGetUser(board.createdBy)
+    const dispatch = useDispatch()
 
     const toggleMembersModal = () => {
         setIsShowBoardMember(!isShowBoardMember)
     }
 
-    const showActivities = () => {
+    const showActivities = async (isClear) => {
         setIsShowActivities(!isShowActivities)
-        boardService.updateActivities(board)
+        const boardToUpdate = await boardService.updateActivities(board)
+        dispatch({ type: 'SET_CURR_BOARD', board: boardToUpdate })
     }
 
     const handleChange = (ev) => setActivityFilterText(ev.target.value)
@@ -40,8 +41,6 @@ export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMem
     }, [board.activities, activityFilterText])
     const unReadActivities = useMemo(() => activitiesForDisplay.filter(activity => !activity.isRead), [activitiesForDisplay])
     const activities = useMemo(() => activitiesForDisplay.filter(activity => activity.isRead), [activitiesForDisplay])
-    console.log(unReadActivities);
-    console.log(activities);
     if (!board) return <h1>Loading...</h1>
 
 
@@ -49,7 +48,7 @@ export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMem
         <div className="flex align-center board-header-top-section">
             <div className="board-name-and-owner">
                 <h2><EditableElement onChangeTitle={onChangeTitle}>{board.title}</EditableElement></h2>
-                <h4>{''}Owner :{user?.fullname}</h4>
+                <h4>{''}Owner :{boardOwner?.fullname}</h4>
             </div>
             <div className="flex space-between relative">
                 <span className="board-member-status top-section-item" data-tip data-for="members"
@@ -72,9 +71,21 @@ export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMem
                 </div>
                 <div className={`activities ${isShowActivities ? 'open' : ''}`}>
                     <ArrowBackIcon onClick={showActivities} />
-                    <BoardActivities activityFilterText={activityFilterText} handleChange={handleChange} activities={unReadActivities} user={user} clear={() => boardService.updateActivities(board, true)}
-                        title={board.title} content={`New Activities: ${unReadActivities.length}`} />
-                    <BoardActivities activities={activities} user={user} content={`Activities Read: ${activities.length}`} />
+                    <BoardActivitiesList
+                        activityFilterText={activityFilterText}
+                        handleChange={handleChange}
+                        activities={unReadActivities}
+                        user={loggedInUser}
+                        clear={async () => {
+                            const boardToUpdate = await boardService.updateActivities(board, true)
+                            dispatch({ type: 'SET_CURR_BOARD', board: boardToUpdate })
+                        }}
+                        title={board.title}
+                        content={`New Activities: ${unReadActivities.length}`} />
+                    <BoardActivitiesList
+                        activities={activities}
+                        user={loggedInUser}
+                        content={`Activities Read: ${activities.length}`} />
                 </div>
 
             </div>

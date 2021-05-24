@@ -12,7 +12,7 @@ export const BoardSideBarItem = ({ board, onDeleteBoard, user, idx }) => {
     return (
         !board || !currBoardId ? null : <div className={`board-sidebar-item ${board._id === currBoardId ? 'selected' : ''}`} >
             <Link to={`/board/${board._id}`}>{board.title}</Link>
-            {(user._id === board.createdBy._id) && <DeleteIcon onClick={() => setIsInDeleteMode(true)} />}
+            {(user._id === board.createdBy) && <DeleteIcon onClick={() => setIsInDeleteMode(true)} />}
             <ConfirmModal
                 id={board._id}
                 arg={idx}

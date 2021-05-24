@@ -65,11 +65,10 @@ export function updateBoards(board) {
             type: 'UPDATE_BOARDS',
             board
         }
-        console.log(dispatch);
-        setBoard(dispatch, board)
         dispatch(action)
     }
 }
+
 export function getBoardById(boardId) {
     return async (dispatch) => {
         try {
@@ -190,10 +189,8 @@ export function changeBoardMemebrs(memberData, board, type, user) {
     return async (dispatch) => {
         try {
             const notification = await boardService.changeBoardMemebrs(memberData, board, type, user)
-
-            //for later use
-            // const { boardToUpdate } = notification
-            // setBoard(dispatch, boardToUpdate)
+            const { boardToUpdate } = notification
+            setBoard(dispatch, boardToUpdate)
             const userToUpdate = await userService.updateNotifications(notification)
             socketService.emit('onUpdateUser', userToUpdate)
         } catch (err) {
@@ -286,7 +283,7 @@ export function changeGroupColor(color, board, groupId) {
         }
     }
 }
-export function onChangeGroupTitle(groupToUpdate) {
+export function changeGroupTitle(groupToUpdate) {
     return async (dispatch) => {
         try {
             const board = await boardService.changeGroupTitle(groupToUpdate)
@@ -305,12 +302,17 @@ export function onChangeGroupTitle(groupToUpdate) {
         }
     }
 }
-export function changeTaskMembers(memberId, sign, board, card, groupId, user) {
-    return async () => {
+export function changeTaskMembers(member, sign, board, card, groupId, user) {
+    return async (dispatch) => {
         try {
-            const notification = await boardService.updateTaskMembers(memberId, sign, board, card, groupId, user)
-            const userToUpdate = await userService.updateNotifications(notification)
-            socketService.emit('onUpdateUser', userToUpdate)
+            const notification = await boardService.updateTaskMembers(member, sign, board, card, groupId, user)
+            const { boardToUpdate, notificationTxt } = notification
+            setBoard(dispatch, boardToUpdate)
+            if (notificationTxt) {
+                const userToUpdate = await userService.updateNotifications(notification)
+                socketService.emit('onUpdateUser', userToUpdate)
+            }
+
         } catch (err) {
         }
     }

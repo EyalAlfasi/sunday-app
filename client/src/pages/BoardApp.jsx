@@ -32,8 +32,8 @@ export const BoardApp = ({ match, history }) => {
     useEffect(() => {
         initializeBoards()
         return () => {
-            socketService.off('boardUpdate', updateBoards)
-            socketService.off('updateUser', updateUserNotifications)
+            socketService.off('boardUpdate', updateBoardsInStore)
+            socketService.off('updateUser', updateUserInStore)
             socketService.terminate()
         }
     }, [])
@@ -59,15 +59,19 @@ export const BoardApp = ({ match, history }) => {
         socketService.setup()
         socketService.emit('userSocket', loggedInUser)
         socketService.on('boardUpdate', updateBoardsInStore)
-        socketService.on('updateUser', updateUserNotifications)
+        socketService.on('updateUser', updateUserInStore)
         const { boardId } = match.params;
         if (!boardId) dispatch(loadBoards(loggedInUser._id))
         else if (!boards.length && boardId) dispatch(loadBoards(loggedInUser._id))
         if (boardId) dispatch(getBoardById(boardId))
     }
 
-    const updateBoardsInStore=(board)=>{
-        updateBoards(board)
+    const updateBoardsInStore = (board) => {
+        dispatch(updateBoards(board))
+    }
+
+    const updateUserInStore = (user) => {
+        dispatch(updateUserNotifications(user))
     }
 
     const onDeleteBoard = async (boardId, boardIdx) => {

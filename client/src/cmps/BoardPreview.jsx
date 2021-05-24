@@ -1,9 +1,9 @@
-import React, { Component, useMemo, useState } from 'react'
+import  { useMemo, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { GroupPreview } from './group-preview-components/GroupPreview';
 import { BoardHeader } from './BoardHeader';
 import {
-    loadBoards, addCard, addGroup, changeBoardTitle, onChangeGroupTitle, changeBoardMemebrs,
+    loadBoards, addCard, addGroup, changeBoardTitle, changeGroupTitle, changeBoardMemebrs,
     changeGroupColor, removeGroup, changeGroupIdx, changeCardIdx, getKeyById, dragStart, dragEnd
 } from '../store/actions/boardAction.js'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -33,8 +33,8 @@ export const BoardPreview = (props) => {
     // }
 
     const onAddCard = (cardTitle, groupId) => {
-        dispatch(setMsg('Card Successfully Added'))
         dispatch(addCard({ cardTitle, groupId, board, user: loggedInUser }))
+        dispatch(setMsg('Card Successfully Added'))
     }
     const onAddGroup = () => {
         dispatch(addGroup(board, loggedInUser))
@@ -45,7 +45,7 @@ export const BoardPreview = (props) => {
     }
     //Group Title
     const onChangeGroupTitle = (groupTitle, groupId) => {
-        dispatch(onChangeGroupTitle({ board, groupId, groupTitle, user: loggedInUser }))
+        dispatch(changeGroupTitle({ board, groupId, groupTitle, user: loggedInUser }))
     }
     const onChangeBoardMemebrs = (memberData, type) => {
         dispatch(changeBoardMemebrs(memberData, board, type, loggedInUser));
@@ -237,11 +237,10 @@ export const BoardPreview = (props) => {
         }
         return boardCopy
     }, [filterBy, board])
-
     return (
         <div className="board-preview-container">
             <BoardHeader
-                user={loggedInUser}
+                loggedInUser={loggedInUser}
                 board={board}
                 onAddGroup={onAddGroup}
                 changeBoardView={changeBoardView}
@@ -249,7 +248,7 @@ export const BoardPreview = (props) => {
                 onChangeBoardMemebrs={onChangeBoardMemebrs}
                 onSetFilter={onSetFilter}
             />
-            {/* {isShowDashboard && <DashBoard board={board} />}
+            {isShowDashboard && <DashBoard board={board} />}
             {!isShowDashboard &&
                 <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
                     <div
@@ -278,7 +277,7 @@ export const BoardPreview = (props) => {
                             )}
                         </Droppable>
                     </div>
-                </DragDropContext>} */}
+                </DragDropContext>}
         </div>
     )
 }

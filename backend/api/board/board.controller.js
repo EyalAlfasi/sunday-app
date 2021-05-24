@@ -32,7 +32,6 @@ async function deleteBoard(req, res) {
 
 async function getBoard(req, res) {
     try {
-       
         const board = await boardService.getById(req.params.id)
         res.send(board)
     } catch (err) {
@@ -60,14 +59,14 @@ async function addBoard(req, res) {
 async function updateBoard(req, res) {
     try {
         const board = req.body
-        board.members.forEach(member => member._id = ObjectId(member._id))
-        board.groups.forEach(group => {
-            group.createdBy._id = ObjectId(group.createdBy._id)
-            group.cards.forEach(card => {
-                card.createdBy._id = ObjectId(card.createdBy._id)
-                card.members.forEach(member => member._id = ObjectId(member._id))
-            })
-        })
+        // board.members.forEach(member => member._id = ObjectId(member._id))
+        // board.groups.forEach(group => {
+        //     group.createdBy._id = ObjectId(group.createdBy._id)
+        //     group.cards.forEach(card => {
+        //         card.createdBy._id = ObjectId(card.createdBy._id)
+        //         card.members.forEach(member => member._id = ObjectId(member._id))
+        //     })
+        // })
         const updatedBoard = await boardService.update(board)
         socketService.emitToMyBoard( 'boardUpdate',  updatedBoard )
         res.send(updatedBoard)
