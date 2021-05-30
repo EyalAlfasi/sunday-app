@@ -226,7 +226,7 @@ async function changeBoardTitle(newTitle, board, user) {
 }
 
 function sortByTitle(groupsToSort) {
-    groupsToSort = groupsToSort.sort((group1, group2) => {
+    groupsToSort.sort((group1, group2) => {
         if (group1.title.toLowerCase() > group2.title.toLowerCase()) return 1
         else if (group1.title.toLowerCase() < group2.title.toLowerCase()) return -1;
         else return 0;
@@ -235,7 +235,7 @@ function sortByTitle(groupsToSort) {
 }
 
 function sortByDate(groupsToSort) {
-    groupsToSort = groupsToSort.sort((group1, group2) => {
+    groupsToSort.sort((group1, group2) => {
         return group2.createdAt - group1.createdAt
     })
     return groupsToSort

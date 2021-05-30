@@ -12,6 +12,7 @@ import { socketService } from '../services/socketService'
 import { Route } from 'react-router-dom';
 import { Redirect } from 'react-router-dom'
 import { CardUpdates } from '../cmps/CardUpdates'
+import { ClickAwayListener } from '@material-ui/core'
 
 export const BoardApp = ({ match, history }) => {
     const [isBoardSideBarOpen, setIsBoardSideBarOpen] = useState(window.innerWidth >= 800)
@@ -119,10 +120,10 @@ export const BoardApp = ({ match, history }) => {
                     />
                 </div>
                 {board && <BoardPreview />}
-                <Route path={`${match.path}/card/:cardId`} render={(props) => {
-                    return <CardUpdates board={board} {...props} />
-                }} />
-                {msg && <div className="snackbar slide-top">{msg}</div>}
+                    <Route path={`${match.path}/card/:cardId`} render={(props) => {
+                        return <CardUpdates board={board} {...props} />
+                    }} />
+                    {msg && <div className="snackbar slide-top">{msg}</div>}
             </div>
         </div>
     )

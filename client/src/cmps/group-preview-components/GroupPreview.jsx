@@ -92,7 +92,6 @@ export const GroupPreview = ({ onAddCard, group, onChangeGroupTitle, onDrag, onD
                                 {...provided.dragHandleProps}
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}>
-
                                 {groupForDisplay.cards.map((card, idx) => {
                                     return (
                                         <CardPreview
