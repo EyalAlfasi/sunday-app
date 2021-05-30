@@ -34,7 +34,7 @@ export const GroupSortModal = ({ onSetGroupSort }) => {
                 }}
                 transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'center',
+                    horizontal: 'left',
                 }}
             >
                 <MenuList className="group-sort-modal">

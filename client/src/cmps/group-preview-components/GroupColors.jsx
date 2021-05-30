@@ -35,7 +35,7 @@ export const GroupColors = ({ onChangeColor }) => {
                 }}
                 transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'center',
+                    horizontal: 'left',
                 }}
             >
                 <div className="group-colors-container">

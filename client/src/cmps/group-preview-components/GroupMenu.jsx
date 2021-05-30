@@ -56,7 +56,7 @@ export const GroupMenu = ({ groupId, onSetGroupSort, onShowConfirmModal, color }
             }}
             transformOrigin={{
                 vertical: 'top',
-                horizontal: 'center',
+                horizontal: 'left',
             }}
         >
             <MenuList className="group-menu-container">

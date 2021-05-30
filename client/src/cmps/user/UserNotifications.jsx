@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function UserNotifications({ notifications, onCleanNotifications, onUpdateNotifications }) {
-  
+
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -35,7 +35,11 @@ export function UserNotifications({ notifications, onCleanNotifications, onUpdat
         <div>
             <div className="relative">
                 {notifications && <span className="count-notifications">{notifications.length}</span>}
-                <NotificationsNoneIcon data-tip data-for="notifications" aria-describedby={id} onClick={handleClick} />
+                <NotificationsNoneIcon
+                    data-tip data-for="notifications"
+                    aria-describedby={id}
+                    onClick={handleClick}
+                />
             </div>
             <Popover
                 id={id}
@@ -43,11 +47,11 @@ export function UserNotifications({ notifications, onCleanNotifications, onUpdat
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={{
-                    vertical: 'top',
+                    vertical: 'bottom',
                     horizontal: 'right',
                 }}
                 transformOrigin={{
-                    vertical: 'center',
+                    vertical: 'top',
                     horizontal: 'left',
                 }}
             >

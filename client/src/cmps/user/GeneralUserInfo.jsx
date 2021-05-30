@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { getBoardsByUserId } from '../../store/actions/boardAction'
 import ArrowForwardOutlinedIcon from '@material-ui/icons/ArrowForwardOutlined';
 import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
@@ -9,7 +7,7 @@ import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 import { boardService } from '../../services/boardService';
 
 
-export class _GeneralUserInfo extends Component {
+export class GeneralUserInfo extends Component {
     state = {
         boards: null
     }
@@ -104,16 +102,12 @@ export class _GeneralUserInfo extends Component {
 }
 
 
-const mapGlobalStateToProps = (state) => {
-    return {
-    }
-}
-const mapDispatchToProps = {
-    getBoardsByUserId
-}
-
-
-export const GeneralUserInfo = connect(mapGlobalStateToProps, mapDispatchToProps)(_GeneralUserInfo);
-
+// export const GeneralUserInfo = () => {
+//     return (
+//         <div>
+            
+//         </div>
+//     )
+// }
 
 
