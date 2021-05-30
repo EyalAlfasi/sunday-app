@@ -52,51 +52,59 @@ export class GeneralUserInfo extends Component {
         const activeCards = this.getActiveCards();
         return <div className="general-container">
             <div className="general-inner-container">
-                <div className="users-boards-list">
-                    <div>
+                <div className="list-container boards-list">
+                    <div className="list-title-container">
                         <h2>Boards</h2>
                         <DashboardOutlinedIcon />
                     </div>
-                    <div>
+                    <div className="list-items-container">
                         {!boards.length ? <h3>No boards to show</h3> :
                             boards.map(board => {
-                                return <div key={board._id} className="users-boards-list-row">
-                                    <Link to={`/board/${board._id}`}><span>{board.title}</span> <ArrowForwardOutlinedIcon /> </Link>
+                                return <div key={board._id} className="info-row">
+                                    <Link to={`/board/${board._id}`}>
+                                        <span>{board.title}</span>
+                                        <ArrowForwardOutlinedIcon />
+                                    </Link>
                                 </div>
                             })}
                     </div>
                 </div>
-                <div className="active-items-container">
-                    <div>
+                <div className="list-container active-cards-list">
+                    <div className="list-title-container">
                         <h2>Active cards</h2>
                         <AssignmentOutlinedIcon />
                     </div>
-                    <div>
+                    <div className="list-items-container">
                         {!activeCards ? <h3>No active cards to show</h3> :
                             activeCards.map(card => {
-                                return <Link key={card.id} to={`/board/${card.boardId}/card/${card.id}`}> <div style={{ borderLeft: `7px solid ${card.status.color}` }}
-                                    className="active-items-list-row">
-                                    <h3>{card.title}</h3>
-                                </div></Link>
+                                return <div className="info-row">
+                                    <Link
+                                        style={{ borderLeft: `7px solid ${card.status.color}` }}
+                                        key={card.id}
+                                        to={`/board/${card.boardId}/card/${card.id}`}
+                                    >
+                                        <span>{card.title}</span>
+                                    </Link>
+                                </div>
                             })}
                     </div>
                 </div>
-                <div className="personal-info-container">
-                    <div>
+                <div className="list-container personal-info-list">
+                    <div className="list-title-container">
                         <h2>Contact information</h2>
                         <AssignmentOutlinedIcon />
                     </div>
-                    <div>
-                        <div className="personal-info-icon-row">
-                            <a href="mailto:email@example.com">
+                    <div className="list-items-container">
+                        <div className="info-row">
+                            <a href={`mailto:${user.email}`}>
                                 <AlternateEmailIcon />
-                                <h3>{user.email}</h3>
+                                <span>{user.email}</span>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     }
 }
 
@@ -104,7 +112,7 @@ export class GeneralUserInfo extends Component {
 // export const GeneralUserInfo = () => {
 //     return (
 //         <div>
-            
+
 //         </div>
 //     )
 // }
