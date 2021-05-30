@@ -24,12 +24,11 @@ export class _GeneralUserInfo extends Component {
     getActiveCards = () => {
         const { boards } = this.state;
         const { user } = this.props;
-        // const count = boardService.deepSearchByKey(boards, user._id)
         const count = boards.reduce((acc, board) => {
             board.groups.forEach(group => {
                 group.cards.forEach(card => {
-                    card.members.forEach(member => {
-                        if (member._id === user._id && card.status.text !== 'Done') {
+                    card.members.forEach(memberId => {
+                        if (memberId === user._id && card.status.text !== 'Done') {
                             const activeCard = {
                                 id: card.id,
                                 title: card.title,

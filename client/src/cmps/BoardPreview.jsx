@@ -1,4 +1,4 @@
-import  { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { GroupPreview } from './group-preview-components/GroupPreview';
 import { BoardHeader } from './BoardHeader';
@@ -118,7 +118,7 @@ export const BoardPreview = (props) => {
         const boardToUpdate = JSON.parse(JSON.stringify(board))
         if (type === 'group') {
             const newGroups = Array.from(boardToUpdate.groups)
-            const draggedGroup = newGroups.find(group => group.id === draggableId)
+            const draggedGroup = boardToUpdate.groups.find(group => group.id === draggableId)
             newGroups.splice(source.index, 1)
             newGroups.splice(destination.index, 0, draggedGroup)
             boardToUpdate.groups = newGroups
@@ -167,7 +167,7 @@ export const BoardPreview = (props) => {
         else setIsShowDashboard(false)
     }
     const onSetFilter = (filterBy) => {
-        setFilterBy({ ...filterBy })
+        setFilterBy(filterBy)
     }
 
     const filteredBoard = useMemo(() => {
@@ -208,8 +208,8 @@ export const BoardPreview = (props) => {
             if (filterBy.membersId.length) {
                 boardCopy.groups = boardCopy.groups.filter(group => {
                     const filteredCards = group.cards.filter(card => {
-                        const member = card.members.find(member => {
-                            return (filterBy.membersId.includes(member._id))
+                        const member = card.members.find(memberId => {
+                            return (filterBy.membersId.includes(memberId))
                         })
                         if (!member) return false
                         return true
@@ -221,7 +221,7 @@ export const BoardPreview = (props) => {
                     return false
                 })
             }
-            if (filterBy.sortBy && !props.onDrag) {
+            if (filterBy.sortBy && !onDrag) {
                 if (filterBy.sortBy === 'name') boardCopy.groups = boardService.sortByTitle(boardCopy.groups)
                 else boardCopy.groups = boardService.sortByDate(boardCopy.groups)
             }
@@ -257,7 +257,8 @@ export const BoardPreview = (props) => {
                     >
                         <Droppable droppableId={board._id} isCombineEnabled type='group'>
                             {(provided) => (
-                                <div ref={provided.innerRef}
+                                <div
+                                    ref={provided.innerRef}
                                     {...provided.droppableProps}>
                                     {!filteredBoard.groups.length ? <NoResultsPlaceholder /> :
                                         filteredBoard.groups.map((group, idx) => (

@@ -7,6 +7,7 @@ import { FilterOptions } from './FilterOptions';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import SwapVertIcon from '@material-ui/icons/SwapVert';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { MemberForDisplay } from './members-components/MemberForDisplay';
 
 export class BoardFilter extends Component {
     state = {
@@ -28,6 +29,7 @@ export class BoardFilter extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.board !== this.props.board) this.setStatuses()
     }
+
     handelChange = (ev) => {
         const value = ev.target.value
         const filterBy = { ...this.state.filterBy }
@@ -119,13 +121,10 @@ export class BoardFilter extends Component {
                         <div className="member-filter">
                             <div className="option-continer">
                                 <h3>Member</h3>
-                                {this.props.board.members.map(member => {
-                                    return <div className="item" key={member._id} onClick={() => this.onGetMember(member._id)} data-tip data-for={member.fullname}>
-                                        {(member.imgUrl) ? <img className="user-thumbnail" src={member.imgUrl} alt="" /> : <h5 className="user-thumbnail">{(utilService.getNameInitials(member.fullname).toUpperCase())}</h5>}
-                                        <span>{member.fullname}</span>
-                                        <ReactTooltip className="sunday-tooltip" id={member.fullname} place="bottom" effect="solid">
-                                            {`Member is ${member.fullname}`}
-                                        </ReactTooltip>
+                                {this.props.board.members.map(memberId => {
+                                    return <div className="item" key={memberId}
+                                        onClick={() => this.onGetMember(memberId)} data-tip data-for={memberId}>
+                                        <MemberForDisplay memberId={memberId} isFilterDisplay={true} />
                                     </div>
                                 })}
                             </div>
@@ -140,14 +139,14 @@ export class BoardFilter extends Component {
                 </div>
             </ClickAwayListener>
             }
-            <div className="clickable-filter-category select-with-icon">
+            {/* <div className="clickable-filter-category select-with-icon">
                 <select className="clickable-filter-category" onChange={this.onSetFilter} name="sortBy"  >
                     <option value="sort">Sort</option>
                     <option value="name">Name</option>
                     <option value="date">Date</option>
                 </select>
                 <SwapVertIcon />
-            </div>
+            </div> */}
         </section>
 
 
