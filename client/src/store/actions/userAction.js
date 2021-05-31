@@ -8,15 +8,7 @@ export function query(txt) {
         }
     }
 }
-export function getUserById(userId) {
-    return async () => {
-        try {
-            return await userService.getUserById(userId)
-        } catch (err) {
-            console.log(err);
-        }
-    }
-}
+
 export function setMsg(msg) {
     return (dispatch) => {
         let action = {

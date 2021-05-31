@@ -20,16 +20,7 @@ export function loadBoards(userId) {
         }
     }
 }
-export function getBoardsByUserId(userId) {
-    return async () => {
-        try {
-            const boards = await boardService.query(userId)
-            return boards
-        } catch (err) {
-            throw err
-        }
-    }
-}
+
 export function changeBoardTitle(newTitle, board, user) {
     return async (dispatch) => {
         try {

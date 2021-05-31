@@ -251,10 +251,7 @@ export const BoardPreview = (props) => {
             {isShowDashboard && <DashBoard board={board} />}
             {!isShowDashboard &&
                 <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-                    <div
-                        className="main-groups-container"
-
-                    >
+                    <div className="main-groups-container">
                         <Droppable droppableId={board._id} isCombineEnabled type='group'>
                             {(provided) => (
                                 <div

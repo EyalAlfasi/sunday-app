@@ -35,7 +35,7 @@ export const GroupColors = ({ onChangeColor, onCloseAll }) => {
                 }}
                 transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'center',
+                    horizontal: 'left',
                 }}
             >
                 <ClickAwayListener onClickAway={onCloseAll}>

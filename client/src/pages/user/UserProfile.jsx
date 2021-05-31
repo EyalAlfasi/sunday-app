@@ -1,52 +1,46 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link, Redirect, Route } from 'react-router-dom'
 import { MainSideBar } from '../../cmps/MainSideBar'
 import { GeneralUserInfo } from '../../cmps/user/GeneralUserInfo'
 import { UpdateProfile } from '../../cmps/user/UpdateProfile'
 import { utilService } from '../../services/utilService'
-import { logOut, getUserById } from '../../store/actions/userAction'
-import { getBoardsByUserId } from '../../store/actions/boardAction'
+import { logOut } from '../../store/actions/userAction'
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import { boardService } from '../../services/boardService'
+import { userService } from '../../services/userService'
+import { useGetUser } from '../../custom-hooks/useGetUser'
 
-export class _UserProfile extends Component {
 
-    state = {
-        user: null,
-        boards: null,
-        isMyProfile: false
-    }
+export const _UserProfile = ({ logOut, loggedInUser, history, match }) => {
 
-    onLogOut = async () => {
-        await this.props.logOut()
-    }
+    const user = useGetUser(match.params.userId)
+    const [boards, setBoards] = useState(null)
+    const [isMyProfile, setIsMyProfile] = useState(false)
 
-    async componentDidMount() {
-        const { loggedInUser, getUserById } = this.props
+    useEffect(() => {
         if (!loggedInUser) {
-            this.props.history.push('/')
+            history.push('/')
             return
         }
-        const { userId } = this.props.match.params
-        const user = await getUserById(userId);
-        const boards = await boardService.query(userId);
-        this.setState({ user, boards }, () => {
-            if (loggedInUser._id === this.state.user._id) {
-                this.setState({ isMyProfile: true });
+    }, [loggedInUser])
+
+    useEffect(() => {
+        (async function () {
+            if (user) {
+                const boards = await boardService.query(user._id);
+                setBoards(boards)
+                if (loggedInUser._id === user._id) setIsMyProfile(true)
             }
-        });
-    }
+        })()
+    }, [user])
 
-    render() {
-        const { user, isMyProfile, boards } = this.state
-        const { match, loggedInUser } = this.props
-        if (!loggedInUser) return <Redirect exact to="/" />
-        if (!user || !boards) return null
-
-        return <div>
+    if (!loggedInUser) return <Redirect exact to="/" />
+    if (!user || !boards) return null
+    return (
+        <div>
             <div className="user-profile-main-container">
-                <MainSideBar onLogOut={this.onLogOut} user={loggedInUser} />
+                <MainSideBar onLogOut={logOut} user={loggedInUser} />
                 <div className="user-profile-panel">
                     <div className="user-profile-header">
                         <Link to={'/board'} className="link"><ArrowBackOutlinedIcon /></Link>
@@ -73,8 +67,9 @@ export class _UserProfile extends Component {
                 </div>
             </div>
         </div>
-    }
+    )
 }
+
 
 const mapGlobalStateToProps = (state) => {
     return {
@@ -83,8 +78,6 @@ const mapGlobalStateToProps = (state) => {
 }
 const mapDispatchToProps = {
     logOut,
-    getUserById,
-    getBoardsByUserId
 }
 
 
