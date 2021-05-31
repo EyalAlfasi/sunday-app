@@ -34,10 +34,11 @@
 
 import React from 'react'
 
-export const Colors = ({ onChangeColor, groupId }) => {
+export const Colors = ({ onChangeColor, groupId ,onClose}) => {
 
     const changeColor = (color) => {
         onChangeColor(color);
+        onClose()
     }
 
     const colorsList = [

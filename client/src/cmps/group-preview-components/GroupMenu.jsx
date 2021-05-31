@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ArrowDropDownOutlinedIcon from '@material-ui/icons/ArrowDropDownOutlined';
-import { ClickAwayListener, ListItemIcon, MenuItem, MenuList, Popover } from '@material-ui/core';
+import {  ListItemIcon, MenuItem, MenuList, Popover } from '@material-ui/core';
 import { changeGroupColor } from '../../store/actions/boardAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMsg } from '../../store/actions/userAction';
@@ -23,9 +23,11 @@ export const GroupMenu = ({ groupId, onSetGroupSort, onShowConfirmModal, color }
     const handleClose = () => {
         setAnchorEl(null);
     };
+
     const onChangeGroupColor = async (color) => {
         dispatch(setMsg('Group color Successfully Change'))
         await dispatch(changeGroupColor(color, board, groupId))
+        handleClose()
     }
 
 
@@ -44,32 +46,32 @@ export const GroupMenu = ({ groupId, onSetGroupSort, onShowConfirmModal, color }
                 border: `1px solid ${color}`
             }}
         />
-
-        <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-            }}
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-            }}
-        >
-            <MenuList className="group-menu-container">
-                <GroupColors onChangeColor={onChangeGroupColor} />
-                <MenuItem onClick={onShowConfirmModal}>
-                    <ListItemIcon >
-                        <DeleteIcon />
-                    </ListItemIcon>
-                    <span>Delete Group</span>
-                </MenuItem>
-                <GroupSortModal onSetGroupSort={onSetGroupSort} />
-            </MenuList>
-        </Popover>
+            <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+            >
+                <MenuList className="group-menu-container">
+                    <GroupColors onCloseAll={handleClose} 
+                    onChangeColor={onChangeGroupColor} />
+                    <MenuItem onClick={onShowConfirmModal}>
+                        <ListItemIcon >
+                            <DeleteIcon />
+                        </ListItemIcon>
+                        <span>Delete Group</span>
+                    </MenuItem>
+                    <GroupSortModal onSetGroupSort={onSetGroupSort} />
+                </MenuList>
+            </Popover>
     </>
     )
 }

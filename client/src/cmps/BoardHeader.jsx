@@ -91,12 +91,12 @@ export const BoardHeader = ({ board, onAddGroup, onChangeTitle, onChangeBoardMem
             </div>
         </div>
 
-        <div className=" flex space-between align-flex-end">
+        <div className="flex space-between align-flex-end p-m2">
             <div className="switch-view" >
-                <select onChange={changeBoardView} name="">
+                {/* <select onChange={changeBoardView} name="">
                     <option value="board">Board</option>
                     <option value="dashboard">DashBoard</option>
-                </select>
+                </select> */}
             </div>
             <div className="board-options flex align-flex-end relative">
                 <BoardFilter onSetFilter={onSetFilter} board={board} />

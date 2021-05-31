@@ -21,6 +21,12 @@
     font-size: rem(30px);
 }
 
+.p-m2 {
+    * {
+        margin: 0 2px;
+    }
+}
+
 // flex helpers
 
 .flex {
@@ -122,20 +128,20 @@
 
     & input {
         background-color: rgba(255, 255, 255, 0);
-        width: 100px;
+        width: 110px;
         padding: 5px 5px 5px 30px;
         border: none;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         border-radius: 3px;
-        transition: all 0.2s ease;
         height: 100%;
         &:hover {
             background-color: $lightgrey;
         }
-
+        
         &:focus {
+            transition: all 0.4s ease;
             width: 100%;
             border: 1px solid $blue;
             &:hover {

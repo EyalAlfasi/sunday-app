@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Colors } from '../Colors'
 import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
-import { ListItemIcon, MenuItem, Popover } from '@material-ui/core';
+import { ClickAwayListener, ListItemIcon, MenuItem, Popover } from '@material-ui/core';
 
-export const GroupColors = ({ onChangeColor }) => {
+export const GroupColors = ({ onChangeColor, onCloseAll }) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (ev) => {
@@ -38,9 +38,13 @@ export const GroupColors = ({ onChangeColor }) => {
                     horizontal: 'center',
                 }}
             >
-                <div className="group-colors-container">
-                    <Colors onChangeColor={onChangeColor} />
-                </div>
+                <ClickAwayListener onClickAway={onCloseAll}>
+                    <div className="group-colors-container">
+                        <Colors
+                            onClose={handleClose}
+                            onChangeColor={onChangeColor} />
+                    </div>
+                </ClickAwayListener>
 
             </Popover></>
     )

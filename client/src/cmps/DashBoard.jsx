@@ -2,34 +2,31 @@
 import React, { Component } from 'react'
 
 import Chart from 'react-apexcharts';
+import { useGetUser } from '../custom-hooks/useGetUser';
+import { userService } from '../services/userService';
 
 
-export class DashBoard extends Component {
-    componentDidMount() {
+export const DashBoard = ({ board }) => {
 
 
-    }
-
-    cardStatusByMember = () => {
-        const { board } = this.props
-        var cardsByMembers = {}
+    const cardStatusByMember = async () => {
+        let cardsByMembers = {}
+        let cardsMembers = []
         board.groups.forEach(group => {
-            group.cards.forEach(card => {
-                card.members.forEach((member) => {
-                    if (!cardsByMembers[member.fullname]) {
-                        cardsByMembers[member.fullname] = [{ status: card.status }]
-
-                    } else {
-                        cardsByMembers[member.fullname].push({ status: card.status })
-
-                    }
+            group.cards.forEach(async card => {
+                Promise.all(card.members.map(async (memberId) => {
+                    return await userService.getUserById(memberId)
+                })).then(cardsMembers=>{
+                    cardsMembers.forEach(member => {
+                        if (!cardsByMembers[member.fullname]) {
+                            cardsByMembers[member.fullname] = [{ status: card.status }]
+                        } else {
+                            cardsByMembers[member.fullname].push({ status: card.status })
+                        }
+                    })
                 })
             })
         })
-
-
-
-
         var prevText = ''
         var prevName = ''
         // var counter = 0
@@ -44,7 +41,7 @@ export class DashBoard extends Component {
 
 
             cardsByMembers[key].forEach((card, idx, arr) => {
-                
+
                 if (values[card.status.text]) {
                     if (prevName === key && prevText === card.status.text) {
 
@@ -115,20 +112,21 @@ export class DashBoard extends Component {
 
     }
 
-    render() {
-        const value = this.cardStatusByMember()
-        // const { board } = this.props
-        // const hi = this.cardStatusByMember()
 
-        return (
-            <div>
-                <Chart options={value.options} series={value.series} type="bar" width={'70%'} height={'300%'} />
+    const value = cardStatusByMember()
+    // const { board } = this.props
+    // const hi = this.cardStatusByMember()
 
+    return (
+        <div>
+            <Chart options={value.options}
+                series={value.series}
+                type="bar"
+                width={'70%'}
+                height={'300%'} />
+        </div>
+    )
 
-            </div>
-
-        )
-    }
 }
 
 
